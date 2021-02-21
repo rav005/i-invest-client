@@ -5,26 +5,32 @@
             <div class="row">
                 <h4 class="col-7">Accounts</h4>
                 <div class="col-4">
-                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
+                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i
+                            class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
                 </div>
             </div>
-            
-            <div class="card col-11 mb-2" *ngFor="let acc of accounts">
-                <div class="card-body row">
-                    <!-- <div class="row"> -->
+            <div *ngIf="accounts.length > 0">
+
+                <div class="card col-11 mb-2" *ngFor="let acc of accounts">
+                    <div class="card-body row">
+                        <!-- <div class="row"> -->
                         <h5 class="card-title col-8">{{ acc.name }}</h5>
                         <p class="card-text right col-4">{{ acc.balance | currency }}</p>
-                    <!-- </div> -->
-                    <h6 class="card-subtitle text-muted col-9">{{ acc.currency }}</h6>
-                    <button type="button" class="btn btn-link right col-3" (click)="viewAccount(acc)">
-                        <i class="bi bi-arrow-right-short"></i>View Account</button>
+                        <!-- </div> -->
+                        <h6 class="card-subtitle text-muted col-9">{{ acc.currency }}</h6>
+                        <div class="col-3 right">
+                            <button type="button" class="btn btn-link" (click)="viewAccount(acc)">View </button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div *ngIf="accounts.length == 0">
+                <p>No accounts</p>
             </div>
         </div>
 
-        <div class="col-3" *ngIf="watchList">
+        <div class="col-3" *ngIf="watchList.length > 0">
             <h4>Watchlist</h4>
-
             <div class="card mb-2" *ngFor="let s of watchList">
                 <div class="card-body">
                     <div class="row">
