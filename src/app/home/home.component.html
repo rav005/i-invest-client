@@ -3,32 +3,35 @@
     <div class="row">
         <div class="col-8">
             <div class="row">
-                <h4 class="col-8">Accounts</h4>
-                <div class="col-3">
-                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i class="bi bi-arrow-right-short"></i>Add Account</button>
+                <h4 class="col-7">Accounts</h4>
+                <div class="col-4">
+                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
                 </div>
             </div>
             
-            <div class="card  offset-0 col-11 mb-2" *ngFor="let acc of accounts">
-                <div class="card-body">
-                    <h5 class="card-title">{{ acc.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ acc.currency }}</h6>
-                    <p class="card-text">{{ acc.balance | currency }}</p>
+            <div class="card col-11 mb-2" *ngFor="let acc of accounts">
+                <div class="card-body row">
+                    <!-- <div class="row"> -->
+                        <h5 class="card-title col-8">{{ acc.name }}</h5>
+                        <p class="card-text right col-4">{{ acc.balance | currency }}</p>
+                    <!-- </div> -->
+                    <h6 class="card-subtitle text-muted col-9">{{ acc.currency }}</h6>
+                    <button type="button" class="btn btn-link right col-3" (click)="viewAccount(acc)">
+                        <i class="bi bi-arrow-right-short"></i>View Account</button>
                 </div>
             </div>
         </div>
 
-        <div class="col-3">
+        <div class="col-3" *ngIf="watchList">
             <h4>Watchlist</h4>
 
-            <div class="card" *ngFor="let s of watchList">
+            <div class="card mb-2" *ngFor="let s of watchList">
                 <div class="card-body">
-                    <h5 class="card-title">{{ s.symbol }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ s.name }} </h6>
-                    <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a> -->
+                    <div class="row">
+                        <h5 class="card-title col-6">{{ s.symbol }}</h5>
+                        <p class="card-text right col-6">{{ s.price | currency }}</p>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
                 </div>
             </div>
         </div>

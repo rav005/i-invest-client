@@ -4,4 +4,5 @@ export interface Stock {
     symbol: string;
     exchange: string;
     price: number;
+    stockData: any;
 }

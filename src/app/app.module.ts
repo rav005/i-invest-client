@@ -8,16 +8,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpRequestInterceptor } from './helpers/http.interceptor';
 import { AuthService } from './services/auth.service';
 import { AccountService } from './services/account.service';
+import { StockService } from './services/stocks.service';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { SearchStockComponent } from './search-stock/search-stock.component';
+import { ViewAccountComponent } from './view-account/view-account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    SearchStockComponent,
+    ViewAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +34,8 @@ import { HomeComponent } from './home/home.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     AuthService,
-    AccountService
+    AccountService,
+    StockService
   ],
   bootstrap: [AppComponent]
 })

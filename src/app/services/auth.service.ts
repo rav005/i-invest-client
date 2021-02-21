@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Stock } from '../models/stock';
 
@@ -10,6 +10,7 @@ import { Stock } from '../models/stock';
 export class AuthService {
   private token: string | null;
   private watchList: Stock[] = [];
+  private watchList$: Subject<Stock[]>;
 
   constructor(private http: HttpClient) {
     this.token = localStorage.getItem('token');
@@ -17,6 +18,7 @@ export class AuthService {
     if (watchlist) {
       this.watchList = JSON.parse(watchlist);
     }
+    this.watchList$ = new Subject<Stock[]>();
   }
 
   public isAuthenticated(): boolean {
@@ -44,6 +46,7 @@ export class AuthService {
           this.watchList = resp.watchList;
           localStorage.setItem('token', resp.token);
           localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+          sessionStorage.setItem('keys', JSON.stringify(resp.keys));
           return true;
         }
         return false;
@@ -55,6 +58,7 @@ export class AuthService {
     this.token = null;
     this.watchList = [];
     localStorage.clear();
+    sessionStorage.clear();
     window.location.reload();
   }
 
