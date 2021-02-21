@@ -2,9 +2,14 @@
 
     <div class="row">
         <div class="col-8">
-            <h3>Accounts</h3>
+            <div class="row">
+                <h3 class="col-8">Accounts</h3>
+                <div class="col-3">
+                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i class="bi bi-arrow-right-short"></i>Add Account</button>
+                </div>
+            </div>
             
-            <div class="card  offset-1 col-10 mb-2" *ngFor="let acc of accounts">
+            <div class="card  offset-0 col-11 mb-2" *ngFor="let acc of accounts">
                 <div class="card-body">
                     <h5 class="card-title">{{ acc.name }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ acc.currency }}</h6>
