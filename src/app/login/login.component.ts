@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,17 +18,46 @@ export class LoginComponent implements OnInit {
   secQuestion = new FormControl('', Validators.required);
   secQuestionAns = new FormControl('', Validators.required);
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
   ngOnInit(): void {
   }
 
   login() {
-    console.log(`${this.username.value}: ${this.password}`);
+    if (this.username.valid && this.password.valid) {
+      this.auth.login(this.username.value, this.password.value)
+        .subscribe(resp => {
+          console.log('data resp: ', resp);
+          return resp;
+        }, err => {
+          console.error('err: ', err);
+          return err;
+        });
+    } else {
+      this.username.markAsTouched();
+      this.password.markAsTouched();
+      this.password.setValue('');
+    }
   }
-
+  
   signup() {
-    console.log(`${this.username}: ${this.password}\n${this.secQuestion}: ${this.secQuestionAns}`);
+    console.log(`${this.username.value}: ${this.password.value}\n${this.secQuestion.value}: ${this.secQuestionAns.value}`);
+    if (this.username.valid && this.password.valid && this.secQuestion.valid && this.secQuestionAns.valid) {
+      this.auth.signup(this.username.value, this.password.value, this.secQuestion.value, this.secQuestionAns.value)
+        .subscribe(resp => {
+          console.log('signup resp: ', resp);
+          return resp;
+        }, err => {
+          console.error('err: ', err);
+          return err;
+        });
+    } else {
+      this.username.markAsTouched();
+      this.password.markAsTouched();
+      this.password.setValue('');
+      this.secQuestion.markAsTouched();
+      this.secQuestionAns.markAsTouched();
+    }
   }
 
   private reset() {
