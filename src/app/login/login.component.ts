@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -18,20 +19,33 @@ export class LoginComponent implements OnInit {
   secQuestion = new FormControl('', Validators.required);
   secQuestionAns = new FormControl('', Validators.required);
 
-  constructor(private auth: AuthService) { }
+  enableSecurityQuestion: boolean = false;
+  errorMsg: string | null = null;
+
+  constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['']);
+    }
   }
 
   login() {
+    this.errorMsg = null;
     if (this.username.valid && this.password.valid) {
       this.auth.login(this.username.value, this.password.value)
         .subscribe(resp => {
-          console.log('data resp: ', resp);
-          return resp;
+          if (resp) {
+            this.router.navigate(['']);
+          } else {
+            this.errorMsg = 'Invalid username/password';
+          }
         }, err => {
-          console.error('err: ', err);
-          return err;
+          if (err?.error?.error) {
+            this.errorMsg = err.error.error;
+          } else {
+            this.errorMsg = 'Invalid username/password';
+          }
         });
     } else {
       this.username.markAsTouched();
@@ -41,15 +55,18 @@ export class LoginComponent implements OnInit {
   }
   
   signup() {
-    console.log(`${this.username.value}: ${this.password.value}\n${this.secQuestion.value}: ${this.secQuestionAns.value}`);
+    this.errorMsg = null;
     if (this.username.valid && this.password.valid && this.secQuestion.valid && this.secQuestionAns.valid) {
       this.auth.signup(this.username.value, this.password.value, this.secQuestion.value, this.secQuestionAns.value)
         .subscribe(resp => {
-          console.log('signup resp: ', resp);
-          return resp;
+          if (resp) {
+            this.router.navigate(['']);
+          } else {
+            this.errorMsg = 'Failed to create account';
+          }
         }, err => {
-          console.error('err: ', err);
-          return err;
+          this.errorMsg = 'Failed to create account';
+          console.log('signup error: ', err);
         });
     } else {
       this.username.markAsTouched();
@@ -57,6 +74,14 @@ export class LoginComponent implements OnInit {
       this.password.setValue('');
       this.secQuestion.markAsTouched();
       this.secQuestionAns.markAsTouched();
+    }
+  }
+
+  processForgetPassword() {
+    if (this.username.valid) {
+      
+    } else {
+      this.username.markAsTouched();
     }
   }
 
@@ -69,6 +94,7 @@ export class LoginComponent implements OnInit {
 
   toggleOption(option: string) {
     this.reset();
+    this.errorMsg = null;
     if (option === 'signin') {
       this.signIn = true;
       this.signupOption = false;

@@ -1,22 +1,31 @@
 <div class="container-xl">
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-8">
             <h3>Accounts</h3>
-
-            <div class="card col-sm-3">
+            
+            <div class="card  offset-1 col-10 mb-2" *ngFor="let acc of accounts">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <h5 class="card-title">{{ acc.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ acc.currency }}</h6>
+                    <p class="card-text">{{ acc.balance | currency }}</p>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <h2>Stocks</h2>
+
+        <div class="col-3">
+            <h3>Watchlist</h3>
+
+            <div class="card" *ngFor="let s of watchList">
+                <div class="card-body">
+                    <h5 class="card-title">{{ s.symbol }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ s.name }} </h6>
+                    <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a> -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>

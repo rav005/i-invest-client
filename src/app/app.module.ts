@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { HttpRequestInterceptor } from './helpers/http.interceptor';
 import { AuthService } from './services/auth.service';
+import { AccountService } from './services/account.service';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -27,7 +28,8 @@ import { HomeComponent } from './home/home.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
-    AuthService
+    AuthService,
+    AccountService
   ],
   bootstrap: [AppComponent]
 })

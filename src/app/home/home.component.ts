@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Account } from '../models/account';
 import { Stock } from '../models/stock';
+import { AccountService } from '../services/account.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +12,25 @@ import { Stock } from '../models/stock';
 export class HomeComponent implements OnInit {
 
   accounts: Account[];
-  stocks: Stock[];
+  watchList: Stock[] = [];
 
-  constructor() {
+  constructor(private auth: AuthService, private accountService: AccountService) {
     this.accounts = [];
-    this.stocks = [];
   }
 
   ngOnInit(): void {
+    this.watchList = this.auth.getWatchList();
+    this.getAccounts();
+  }
+
+  private getAccounts() {
+    this.accountService.getAccounts()
+      .subscribe(resp => {
+        this.accounts = resp;
+      }, err => {
+        console.log('getAccounts() err: ', err);
+        this.accounts = [];
+      })
   }
 
 }

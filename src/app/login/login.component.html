@@ -14,6 +14,9 @@
                     [formControl]="password" id="password" placeholder="Password">
                 <label for="password">Password</label>
             </div>
+            <div class="form-floating mb-3" *ngIf="errorMsg">
+                <p class="error">{{ errorMsg }}</p>
+            </div>
             <div class="mb-3">
                 <button type="button" class="btn btn-primary" (click)="login()">Login</button>
                 <button type="button" class="btn btn-link" (click)="toggleOption('forgetpassword')">Forgot Password</button>
@@ -26,8 +29,23 @@
                     [formControl]="username" id="username" placeholder="Username">
                 <label for="username">Username</label>
             </div>
+            <div *ngIf="enableSecurityQuestion">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" [ngClass]="{ 'is-invalid': secQuestion.invalid && secQuestion.touched }" 
+                        [formControl]="secQuestion" id="securityQuestion" placeholder="Security question">
+                    <label for="securityQuestion">Security question</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" [ngClass]="{ 'is-invalid': secQuestionAns.invalid && secQuestionAns.touched }" 
+                        [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security question answer">
+                    <label for="securityQuestionAns">Security question answer</label>
+                </div>
+            </div>
+            <div class="form-floating mb-3" *ngIf="errorMsg">
+                <p class="error">{{ errorMsg }}</p>
+            </div>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary" (click)="login()">Login</button>
+                <button type="button" class="btn btn-primary" (click)="processForgetPassword()">Submit</button>
                 <button type="button" class="btn btn-link" (click)="toggleOption('signin')">Back to login</button>
             </div>
         </div>
@@ -51,6 +69,9 @@
                 <input type="text" class="form-control" [ngClass]="{ 'is-invalid': secQuestionAns.invalid && secQuestionAns.touched }" 
                     [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security question answer">
                 <label for="securityQuestionAns">Security question answer</label>
+            </div>
+            <div class="form-floating mb-3" *ngIf="errorMsg">
+                <p class="error">{{ errorMsg }}</p>
             </div>
             <div class="mb-3">
                 <button type="button" class="btn btn-primary" (click)="signup()">Sign up</button>
