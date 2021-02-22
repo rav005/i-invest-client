@@ -18,9 +18,13 @@ export class LoginComponent implements OnInit {
   password = new FormControl('', Validators.required);
   secQuestion = new FormControl('', Validators.required);
   secQuestionAns = new FormControl('', Validators.required);
+  confirmPassword = new FormControl('', Validators.required);
 
+  private resetPasswordToken: string = '';
   enableSecurityQuestion: boolean = false;
-  errorMsg: string | null = null;
+  enablePasswordReset: boolean = false;
+  errorMsg: string = '';
+  successMsg: string = '';
 
   constructor(private auth: AuthService, private router: Router) { }
 
@@ -31,7 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.errorMsg = null;
+    this.errorMsg = '';
     if (this.username.valid && this.password.valid) {
       this.auth.login(this.username.value, this.password.value)
         .subscribe(resp => {
@@ -55,7 +59,7 @@ export class LoginComponent implements OnInit {
   }
   
   signup() {
-    this.errorMsg = null;
+    this.errorMsg = '';
     if (this.username.valid && this.password.valid && this.secQuestion.valid && this.secQuestionAns.valid) {
       this.auth.signup(this.username.value, this.password.value, this.secQuestion.value, this.secQuestionAns.value)
         .subscribe(resp => {
@@ -78,8 +82,42 @@ export class LoginComponent implements OnInit {
   }
 
   processForgetPassword() {
+    this.errorMsg = '';
     if (this.username.valid) {
-      
+      if (this.enableSecurityQuestion && this.secQuestionAns.invalid) {
+        this.secQuestionAns.markAsTouched();
+        return;
+      }
+      if (this.enablePasswordReset && (this.password.invalid || this.confirmPassword.invalid) 
+      || this.password.value !== this.confirmPassword.value) {
+          this.password.markAsTouched();
+          this.confirmPassword.markAsTouched();
+          return;
+      }
+
+      this.auth.passwordReset(this.username.value, this.secQuestionAns.value, this.password.value, this.resetPasswordToken)
+        .subscribe((resp: any) => {
+          if (resp.question?.length > 0) {
+            this.secQuestion.setValue(resp.question);
+            this.enableSecurityQuestion = true;
+          }
+          if (resp.token?.length > 0) {
+            this.resetPasswordToken = resp.token;
+            this.enableSecurityQuestion = false;
+            this.enablePasswordReset = true;
+          }
+          if (resp.passwordChanged) {
+            this.toggleOption('signin');
+            this.successMsg = 'Successfully changed password';
+          }
+        }, (err: any) => {
+          console.error('password reset: ', err);
+          if (this.resetPasswordToken.length > 0) {
+            this.errorMsg = 'Failed to reset password';
+          } else {
+            this.errorMsg = 'User not found';
+          }
+        });
     } else {
       this.username.markAsTouched();
     }
@@ -88,13 +126,16 @@ export class LoginComponent implements OnInit {
   private reset() {
     this.username.reset();
     this.password.reset();
+    this.password.setValue('');
     this.secQuestion.reset();
     this.secQuestionAns.reset();
+    this.confirmPassword.reset();
+    this.confirmPassword.setValue('');
   }
 
   toggleOption(option: string) {
     this.reset();
-    this.errorMsg = null;
+    this.errorMsg = '';
     if (option === 'signin') {
       this.signIn = true;
       this.signupOption = false;
