@@ -10,7 +10,6 @@ import { Stock } from '../models/stock';
 export class AuthService {
   private token: string | null;
   private watchList: Stock[] = [];
-  private watchList$: Subject<Stock[]>;
 
   constructor(private http: HttpClient) {
     this.token = localStorage.getItem('token');
@@ -18,7 +17,6 @@ export class AuthService {
     if (watchlist) {
       this.watchList = JSON.parse(watchlist);
     }
-    this.watchList$ = new Subject<Stock[]>();
   }
 
   public isAuthenticated(): boolean {
@@ -82,5 +80,33 @@ export class AuthService {
         }
       })
     );
+  }
+
+  public passwordReset(username: string, securityAnswer: string, password: string, token: string) {
+    let req = {
+      username: username,
+      answer: securityAnswer,
+      password: password,
+      token: token
+    };
+    if (token.length > 0) {
+      console.log('token: ', token);
+      return this.http.post('/user/passwordchange', req)
+      .pipe(
+        map((resp: any) => {
+          if (resp.token) {
+            resp.passwordChanged = true;
+          } else {
+            resp.passwordChanged = false;
+          }
+          console.log('adding authentication: ', resp);
+          return resp;
+        })
+      );
+    } else if (securityAnswer?.length > 0) {
+      return this.http.post('/user/passwordresetquestion', req);
+    } else {
+      return this.http.post('/user/passwordreset', req);
+    }
   }
 }
