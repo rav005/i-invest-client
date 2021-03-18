@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://i-invest-server.azurewebsites.net'
+  apiUrl: 'http://localhost:3000'
 };
