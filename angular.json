@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/I-Invest-Client",
+            "outputPath": "dist/i-invest-client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -36,7 +36,7 @@
             "scripts": [],
             "allowedCommonJsDependencies": [
               "axios"
-           ]
+            ]
           },
           "configurations": {
             "production": {
@@ -71,18 +71,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "I-Invest-Client:build"
+            "browserTarget": "i-invest-client:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "I-Invest-Client:build:production"
+              "browserTarget": "i-invest-client:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "I-Invest-Client:build"
+            "browserTarget": "i-invest-client:build"
           }
         },
         "test": {
