@@ -33,12 +33,6 @@ export class HomeComponent implements OnInit {
       //   }, err => {
       //     console.error('failed to get stock data for ' + x.symbol, err);
       //   });
-      this.StockService.getStock(x.symbol).then((resp: any) => {
-        if (resp) {
-          x.stockData = resp;
-          x.price = resp.c;
-        }
-      })
     });
   }
 

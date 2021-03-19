@@ -44,7 +44,6 @@ export class AuthService {
           this.watchList = resp.watchList;
           localStorage.setItem('token', resp.token);
           localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
-          sessionStorage.setItem('keys', JSON.stringify(resp.keys));
           return true;
         }
         return false;
