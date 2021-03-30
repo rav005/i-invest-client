@@ -35,20 +35,21 @@ export class AuthService {
       username: username,
       password: password
     };
-    
+
     return this.http.post('/user/login', req)
-    .pipe(
-      map((resp: any) => {
-        if (resp?.token) {
-          this.token = resp.token;
-          this.watchList = resp.watchList;
-          localStorage.setItem('token', resp.token);
-          localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
-          return true;
-        }
-        return false;
-      })
-    );
+      .pipe(
+        map((resp: any) => {
+          if (resp?.token) {
+            this.token = resp.token;
+            this.watchList = resp.watchList;
+            localStorage.setItem('token', resp.token);
+            localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+            //sessionStorage.setItem('keys', JSON.stringify(resp.keys));
+            return true;
+          }
+          return false;
+        })
+      );
   }
 
   public logout() {
@@ -68,17 +69,17 @@ export class AuthService {
     };
 
     return this.http.post('/user/signup', req)
-    .pipe(
-      map((resp: any) => {
-        if (resp?.token) {
-          this.token = resp.token;
-          localStorage.setItem('token', resp.token);
-          return true;
-        } else {
-          throw resp;
-        }
-      })
-    );
+      .pipe(
+        map((resp: any) => {
+          if (resp?.token) {
+            this.token = resp.token;
+            localStorage.setItem('token', resp.token);
+            return true;
+          } else {
+            throw resp;
+          }
+        })
+      );
   }
 
   public passwordReset(username: string, securityAnswer: string, password: string, token: string) {
@@ -91,17 +92,17 @@ export class AuthService {
     if (token.length > 0) {
       console.log('token: ', token);
       return this.http.post('/user/passwordchange', req)
-      .pipe(
-        map((resp: any) => {
-          if (resp.token) {
-            resp.passwordChanged = true;
-          } else {
-            resp.passwordChanged = false;
-          }
-          console.log('adding authentication: ', resp);
-          return resp;
-        })
-      );
+        .pipe(
+          map((resp: any) => {
+            if (resp.token) {
+              resp.passwordChanged = true;
+            } else {
+              resp.passwordChanged = false;
+            }
+            console.log('adding authentication: ', resp);
+            return resp;
+          })
+        );
     } else if (securityAnswer?.length > 0) {
       return this.http.post('/user/passwordresetquestion', req);
     } else {

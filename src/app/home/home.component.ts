@@ -36,16 +36,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.watchList = this.auth.getWatchList();
     this.getAccounts();
-
-    this.watchList.forEach(x => {
-      // this.StockService.getStock(x.symbol)
-      //   .subscribe((resp: any) => {
-      //       x.stockData = resp;
-      //       x.price = resp.c;
-      //   }, err => {
-      //     console.error('failed to get stock data for ' + x.symbol, err);
-      //   });
-    });
   }
 
   private getAccounts() {

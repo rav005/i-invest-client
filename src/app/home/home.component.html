@@ -35,9 +35,22 @@
                 <div class="card-body">
                     <div class="row">
                         <h5 class="card-title col-6">{{ s.symbol }}</h5>
-                        <p class="card-text right col-6">{{ s.price | currency }}</p>
+                        <p class="card-text right col-6" *ngIf="s.data && s.data.c">{{ s.data.c | currency }}</p>
                     </div>
                     <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
+                    <div class="row" *ngIf="s.data">
+                        <small class="col-6">Open</small>
+                        <small class="col-6 right">{{ s.data.o | currency }}</small>
+
+                        <small class="col-6">High</small>
+                        <small class="col-6 right">{{ s.data.h | currency }}</small>
+
+                        <small class="col-6">Low</small>
+                        <small class="col-6 right">{{ s.data.l | currency }}</small>
+
+                        <small class="col-6">Previous close</small>
+                        <small class="col-6 right">{{ s.data.pc | currency }}</small>
+                    </div>
                 </div>
             </div>
         </div>
