@@ -13,6 +13,10 @@ import { Account } from '../models/account';
       this.accounts = [];
     }
 
+    public get() {
+        return this.accounts;
+    }
+
     public getAccounts() {
         return this.http.get<Account[]>('/account/getAllAccounts')
         .pipe(
@@ -29,12 +33,28 @@ import { Account } from '../models/account';
         return this.http.post<Account>('/account/getAccount', req)
         .pipe(
             map((resp: any) => {
-                if(resp.account) {
+                if (resp.account) {
+                    this.accounts.push(resp.account);
                     return resp.account;
                 } else {
                     throw resp;
                 }
             }
         ));
+    }
+
+    public addAccount(name: string, balance: number, currency: string) {
+        let req = { name: name, balance: balance, currency: currency };
+
+        return this.http.post<Account>('/account/addAccount', req)
+        .pipe(
+            map((resp: any) => {
+                if (resp.account) {
+                    return resp.account;
+                } else {
+                    throw resp;
+                }
+            })
+        );
     }
 }

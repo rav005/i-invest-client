@@ -5,8 +5,8 @@
             <div class="row">
                 <h4 class="col-7">Accounts</h4>
                 <div class="col-4">
-                    <button type="button" class="btn btn-link right" (click)="addAccount()"><i
-                            class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
+                    <button type="button" class="btn btn-link right" data-bs-toggle="modal"
+                        data-bs-target="#addAccount"><i class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
                 </div>
             </div>
             <div *ngIf="accounts.length > 0">
@@ -40,6 +40,55 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade show" id="addAccount" tabindex="-1" aria-labelledby="add-account" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form [formGroup]="accountForm" (ngSubmit)="addAccount()" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="accountName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="accountName" placeholder="5 year goal" formControlName="name">
+                        <div *ngIf="getControl.name.touched && getControl.name.invalid" class="text-danger">
+                            <div *ngIf="getControl.name.errors?.required">Name is required</div>
+                            <div *ngIf="getControl.name.errors?.minlength">Minimum 3 character are required</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="initialAmount" class="form-label">Initial balance</label>
+                        <input type="text" class="form-control" id="initialAmount" placeholder="5000"
+                            formControlName="balance">
+                        <div *ngIf="getControl.balance.touched && getControl.balance.invalid" class="text-danger">
+                            <div *ngIf="getControl.balance.errors?.required">Initial balance is required</div>
+                            <div *ngIf="getControl.balance.errors?.min">Minimum balance of 1 is required</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="currency" class="form-label">Currency</label>
+                        <select class="form-select" id="currency" formControlName="currency" aria-label="Currency">
+                            <option value="CAD">CAD</option>
+                            <option value="USD">USD</option>
+                        </select>
+                        <div *ngIf="getControl.currency.touched && getControl.currency.invalid" class="text-danger">
+                            <div *ngIf="getControl.currency.errors?.required">Currency is required</div>
+                        </div>
+                    </div>
+                    <div class="text-danger">{{ errorMsg }}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Create</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
