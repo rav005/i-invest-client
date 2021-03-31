@@ -11,3 +11,10 @@ export interface Stock {
     symbol: string;
     data: StockQuote;
 }
+
+export interface SearchStock {
+    currency: string;
+    description: string;
+    displaySymbol: string;
+    symbol: string;
+}

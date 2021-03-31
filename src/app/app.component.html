@@ -1,6 +1,21 @@
 <nav class="navbar navbar-light bg-light">
-    <div class="container">
-      <span class="navbar-brand mb-0 h1">I-Invest</span>
+    <div class="container-fluid">
+      <a class="navbar-brand mb-0 h1" href="#">
+        <img src="assets/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+        I-Invest
+      </a>
+
+      <div class="col-4 align-items-center">
+        <input type="text" id="search" [(ngModel)]="searchText" class="form-control" placeholder="Search" (keyup)="search()">
+        <div class="searchResult col-4" *ngIf="searchResult.length > 0">
+          <div class="card" *ngFor="let s of searchResult">
+            <div class="card-body">
+              <h5 class="card-title">{{ s.description }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ s.symbol }}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
       <button class="btn btn-outline-danger right" (click)="logout()">Logout</button>
     </div>
 </nav>

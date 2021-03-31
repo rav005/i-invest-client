@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
   errorMsg: string = '';
 
   constructor(private auth: AuthService, private accountService: AccountService,
-    private StockService: StockService, private router: Router) {
+    private stockService: StockService, private router: Router) {
     this.accounts = [];
 
     this.accountForm = new FormGroup({
@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.watchList = this.auth.getWatchList();
     this.getAccounts();
+    this.stockService.init();
   }
 
   private getAccounts() {

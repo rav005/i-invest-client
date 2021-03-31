@@ -4,6 +4,8 @@ import { AccountService } from '../services/account.service';
 import { Account } from '../models/account';
 import { Stock } from '../models/stock';
 
+declare var jQuery: any;
+
 @Component({
   selector: 'app-view-account',
   templateUrl: './view-account.component.html',
@@ -15,6 +17,7 @@ export class ViewAccountComponent implements OnInit {
   stocks: Stock[] = [];
   
   errorMsg: string | null = null;
+  deleteErrorMsg: string | null = null;
 
   constructor(private _Activatedroute: ActivatedRoute, private router: Router, 
     private accountServ: AccountService) { }
@@ -35,6 +38,21 @@ export class ViewAccountComponent implements OnInit {
     } else {
       this.router.navigate(['']);
     }
+  }
+
+  deleteAccount() {
+    this.accountServ.deleteAccount(this.account!._id)
+    .subscribe((resp: Boolean) => {
+      if (resp) {
+        jQuery("#deleteAccount").modal("hide");
+        this.router.navigate(['']);
+      } else {
+        this.deleteErrorMsg = 'Failed to delete account';  
+      }
+    }, err => {
+      this.deleteErrorMsg = 'Failed to delete account';
+      console.log('err: ', err);
+    });
   }
 
 }

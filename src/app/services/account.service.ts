@@ -57,4 +57,15 @@ import { Account } from '../models/account';
             })
         );
     }
+
+    public deleteAccount(id: string) {
+        const req = { accountId: id };
+
+        return this.http.post<boolean>('/account/deleteAccount', req)
+        .pipe(
+            map((resp: any) => {
+                return true;
+            })
+        );
+    }
 }

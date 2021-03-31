@@ -1,3 +1,10 @@
 .navbar {
     margin-bottom: 5px;
 }
+
+.searchResult {
+    position: fixed;
+    z-index: 10;
+    max-height: 50%;
+    overflow-y: auto;
+}
