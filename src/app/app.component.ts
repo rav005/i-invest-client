@@ -22,8 +22,7 @@ export class AppComponent {
   @ViewChild('searchResultEle')
   searchResultEle!: ElementRef;
   
-  constructor(private auth: AuthService, private stockService: StockService) { 
-  }
+  constructor(private auth: AuthService, private stockService: StockService) { }
 
   logout() {
     this.auth.logout();
@@ -37,10 +36,12 @@ export class AppComponent {
 
   @HostListener('document:mousedown', ['$event'])
   onGlobalClick(event: MouseEvent): void {
-    if(event.target !== this.searchInputEle.nativeElement && event.target !== this.searchResultEle.nativeElement) {
-      this.searchResult = [];
-    } else {
-      this.search();
+    if (this.searchInputEle?.nativeElement && this.searchResultEle?.nativeElement) {
+      if(event.target !== this.searchInputEle.nativeElement && event.target !== this.searchResultEle.nativeElement) {
+        this.searchResult = [];
+      } else {
+        this.search();
+      }
     }
   }
 }

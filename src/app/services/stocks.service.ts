@@ -30,11 +30,11 @@ export class StockService {
     public search(searchText: string) {
         let tickers: SearchStock[] = [];
         let description: SearchStock[] = [];
-        let re = new RegExp(searchText, 'i');
-        console.log('reg: ', re);
-        tickers = this.data.filter(x => x.symbol.match(re));
-        description = this.data.filter(x => x.description.match(re));
-        console.log('tickers: ', tickers, 'desc: ', description);
+        let regex = new RegExp(searchText, 'i');
+
+        tickers = this.data.filter(x => x.symbol.match(regex));
+        description = this.data.filter(x => x.description.match(regex));
+        
         return tickers.concat(description);
     }
 

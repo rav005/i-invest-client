@@ -144,6 +144,7 @@ export class LoginComponent implements OnInit {
       this.signIn = false;
       this.signupOption = false;
       this.forgetPassword = true;
+      this.enableSecurityQuestion = false;
     } else if (option === 'signup') {
       this.signIn = false;
       this.signupOption = true;
