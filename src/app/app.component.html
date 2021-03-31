@@ -6,8 +6,8 @@
       </a>
 
       <div class="col-4 align-items-center">
-        <input type="text" id="search" [(ngModel)]="searchText" class="form-control" placeholder="Search" (keyup)="search()">
-        <div class="searchResult col-4" *ngIf="searchResult.length > 0">
+        <input type="text" #searchInputEle id="search" [(ngModel)]="searchText" class="form-control" placeholder="Search" (keyup)="search()">
+        <div #searchResultEle class="searchResult col-4" *ngIf="searchResult.length > 0">
           <div class="card" *ngFor="let s of searchResult">
             <div class="card-body">
               <h5 class="card-title">{{ s.description }}</h5>
