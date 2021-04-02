@@ -21,9 +21,9 @@
                 <p class="success">{{ successMsg }}</p>
             </div>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary" (click)="login()">Login</button>
-                <button type="button" class="btn btn-link" (click)="toggleOption('forgetpassword')">Forgot Password</button>
-                <button type="button" class="btn btn-link right" (click)="toggleOption('signup')">Sign up</button>
+                <button type="button" class="btn btn-primary" [disabled]="serverDown == true" (click)="login()">Login</button>
+                <button type="button" class="btn btn-link"  [disabled]="serverDown == true" (click)="toggleOption('forgetpassword')">Forgot Password</button>
+                <button type="button" class="btn btn-link right" [disabled]="serverDown == true" (click)="toggleOption('signup')">Sign up</button>
             </div>
         </div>
         <div *ngIf="forgetPassword">
@@ -94,4 +94,11 @@
             </div>
         </div>
     </section>
+
+    <div class="status" *ngIf="serverDown">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        Starting server...
+    </div>
 </div>

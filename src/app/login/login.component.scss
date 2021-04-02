@@ -27,3 +27,15 @@
 .success {
     color: #0d6efd;
 }
+
+.status {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background-color: black;
+    padding: 5px;
+    color: white;
+    font-size: 21px;
+    text-align: center;
+}

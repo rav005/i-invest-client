@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { timeout } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -26,12 +28,44 @@ export class LoginComponent implements OnInit {
   errorMsg: string = '';
   successMsg: string = '';
 
-  constructor(private auth: AuthService, private router: Router) { }
+  serverDown: boolean = true;
+  private time: number = 0;
+
+  constructor(private auth: AuthService, private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
       this.router.navigate(['']);
     }
+    this.checkServerStatus(this.http);
+  }
+
+  private checkServerStatus(http: HttpClient) {
+    if (this.time > 60_000) {
+      alert('Please contact admin!');
+      return;
+    }
+    this.time += 10_000;
+    http.get('/status')
+    .pipe(
+      timeout(3000)
+    )
+    .subscribe( resp => {
+        this.serverDown = false;
+        console.log('resp', resp);
+    }, async err => {
+      console.log('err', err);
+        this.serverDown = true;
+        await this.delay(10_000);
+        this.checkServerStatus(http);
+        
+    });
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
   }
 
   login() {
