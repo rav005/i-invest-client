@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { SearchStockComponent } from './search-stock/search-stock.component';
 import { ViewAccountComponent } from './view-account/view-account.component';
+import { StockDetailsComponent } from './stock-details/stock-details.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ViewAccountComponent } from './view-account/view-account.component';
     LoginComponent,
     HomeComponent,
     SearchStockComponent,
-    ViewAccountComponent
+    ViewAccountComponent,
+    StockDetailsComponent
   ],
   imports: [
     BrowserModule,

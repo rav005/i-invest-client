@@ -1,0 +1,28 @@
+<div class="container-xl" *ngIf="stockQuote">
+
+    <h2>{{ name }}</h2>
+    <h6>{{ symbol }}</h6>
+
+    <div class="row" *ngIf="stockQuote">
+        <small class="col-6">Open</small>
+        <small class="col-6 right">{{ stockQuote.o | currency }}</small>
+
+        <small class="col-6">High</small>
+        <small class="col-6 right">{{ stockQuote.h | currency }}</small>
+
+        <small class="col-6">Low</small>
+        <small class="col-6 right">{{ stockQuote.l | currency }}</small>
+
+        <small class="col-6">Previous close</small>
+        <small class="col-6 right">{{ stockQuote.pc | currency }}</small>
+    </div>
+    
+</div>
+
+<div class="container-xl" *ngIf="errorMsg">
+    <p class="error">{{ errorMsg }}</p>
+</div>
+
+<div class="spinner-border text-primary" role="status" *ngIf="loading">
+    <span class="visually-hidden">Loading...</span>
+</div>
