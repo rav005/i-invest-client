@@ -52,12 +52,10 @@ export class LoginComponent implements OnInit {
     )
     .subscribe( resp => {
         this.serverDown = false;
-        console.log('resp', resp);
     }, async err => {
-      console.log('err', err);
-        this.serverDown = true;
-        await this.delay(10_000);
-        this.checkServerStatus(http);
+      this.serverDown = true;
+      await this.delay(10_000);
+      this.checkServerStatus(http);
         
     });
   }

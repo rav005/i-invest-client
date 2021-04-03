@@ -15,7 +15,9 @@ export class AuthService {
     this.token = localStorage.getItem('token');
     let watchlist = localStorage.getItem('watchlist');
     if (watchlist) {
-      this.watchList = JSON.parse(watchlist);
+      try {
+        this.watchList = JSON.parse(watchlist);
+      } catch(err) {}
     }
   }
 
@@ -30,6 +32,16 @@ export class AuthService {
     return this.watchList;
   }
 
+  private loadWatchlist() {
+    this.http.get('/stock/getWatchlist')
+      .subscribe((resp: any) => {
+        if (resp?.watchList) {
+          this.watchList = resp.watchList;
+          localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+        }
+      }, err => {});
+  }
+
   public login(username: string, password: string): Observable<any> {
     let req = {
       username: username,
@@ -41,10 +53,9 @@ export class AuthService {
         map((resp: any) => {
           if (resp?.token) {
             this.token = resp.token;
-            this.watchList = resp.watchList;
             localStorage.setItem('token', resp.token);
-            localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
             //sessionStorage.setItem('keys', JSON.stringify(resp.keys));
+            this.loadWatchlist();
             return true;
           }
           return false;
