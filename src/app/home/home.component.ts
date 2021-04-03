@@ -82,8 +82,6 @@ export class HomeComponent implements OnInit {
           this.errorMsg = 'Failed to create account';
         });
       
-    } else {
-
     }
   }
 

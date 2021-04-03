@@ -20,7 +20,9 @@
         </div>
         <div class="col-2 mb-2 last">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#updateFunds">Update Funds</button><br />
+                data-bs-target="#updateFunds" (click)="updateFundsType('Deposit')">Deposit</button><br />
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#updateFunds" (click)="updateFundsType('Withdraw')">Withdraw</button><br />
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#deleteAccount">Delete</button>
         </div>
@@ -63,7 +65,7 @@
                     <p><b>Balance/Investments will not be transferred to other account and will be deleted</b></p>
                     <p>Are you sure you want to delete account <strong>{{ account.name }}</strong>?</p>
                 </div>
-                <div class="text-danger">{{ deleteErrorMsg }}</div>
+                <div class="text-danger">{{ modelErrorMsg }}</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -77,19 +79,27 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update balance</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ fundsUpdateType }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-3" *ngIf="account">
-                    <p>Are you sure you want to delete account <strong>{{ account.name }}</strong>?</p>
+            <form [formGroup]="updateFundsForm" (ngSubmit)="updateFunds()" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" placeholder="5000"
+                            formControlName="balance">
+                        <div *ngIf="getFundsControl.balance.touched && getFundsControl.balance.invalid" class="text-danger">
+                            <div *ngIf="getFundsControl.balance.errors?.required">Amount is required</div>
+                            <div *ngIf="getFundsControl.balance.errors?.min">Minimum amount of 1 is required</div>
+                        </div>
+                    </div>
+                    <div class="text-danger">{{ modelErrorMsg }}</div>
                 </div>
-                <div class="text-danger">{{ deleteErrorMsg }}</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" (click)="deleteAccount()">Confirm</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -68,4 +68,9 @@ import { Account } from '../models/account';
             })
         );
     }
+
+    public updateBalance(account: string, balance: number) {
+        const req = { accountId: account, newBalance: balance };
+        return this.http.post('/account/newBalance', req);
+    }
 }

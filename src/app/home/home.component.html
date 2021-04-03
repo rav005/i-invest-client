@@ -95,7 +95,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="initialAmount" class="form-label">Initial balance</label>
-                        <input type="text" class="form-control" id="initialAmount" placeholder="5000"
+                        <input type="number" class="form-control" id="initialAmount" placeholder="5000"
                             formControlName="balance">
                         <div *ngIf="getControl.balance.touched && getControl.balance.invalid" class="text-danger">
                             <div *ngIf="getControl.balance.errors?.required">Initial balance is required</div>
