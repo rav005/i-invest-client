@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { SearchStock } from './models/stock';
 import { AuthService } from './services/auth.service';
 import { StockService } from './services/stocks.service';
@@ -22,7 +23,8 @@ export class AppComponent {
   @ViewChild('searchResultEle')
   searchResultEle!: ElementRef;
   
-  constructor(private auth: AuthService, private stockService: StockService) { }
+  constructor(private auth: AuthService, private stockService: StockService, 
+    private router: Router) { }
 
   logout() {
     this.auth.logout();
@@ -34,13 +36,22 @@ export class AppComponent {
     }
   }
 
+  view(symbol: string, name: string) {
+    this.router.navigate(['stock', symbol, name]);
+  }
+
   @HostListener('document:mousedown', ['$event'])
   onGlobalClick(event: MouseEvent): void {
-    if (this.searchInputEle?.nativeElement && this.searchResultEle?.nativeElement) {
-      if(event.target !== this.searchInputEle.nativeElement && event.target !== this.searchResultEle.nativeElement) {
-        this.searchResult = [];
-      } else {
-        this.search();
+    if (jQuery(event.target).hasClass('stock')) {
+      jQuery(event.target).click();
+      this.searchResult = [];
+    } else {
+      if (this.searchInputEle?.nativeElement && this.searchResultEle?.nativeElement) {
+        if(event.target !== this.searchInputEle.nativeElement && event.target !== this.searchResultEle.nativeElement) {
+          this.searchResult = [];
+        } else {
+          this.search();
+        }
       }
     }
   }

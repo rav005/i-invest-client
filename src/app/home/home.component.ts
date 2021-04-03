@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Account } from '../models/account';
-import { Stock } from '../models/stock';
+import { News, Stock } from '../models/stock';
 import { AccountService } from '../services/account.service';
 import { AuthService } from '../services/auth.service';
 import { StockService } from '../services/stocks.service';
@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   accounts: Account[];
   watchList: Stock[] = [];
+  marketNews: News[] = [];
 
   accountForm: FormGroup;
   errorMsg: string = '';
@@ -37,6 +38,7 @@ export class HomeComponent implements OnInit {
     this.watchList = this.auth.getWatchList();
     this.getAccounts();
     this.stockService.init();
+    this.getMarketNews();
   }
 
   private getAccounts() {
@@ -47,6 +49,16 @@ export class HomeComponent implements OnInit {
         console.log('getAccounts() err: ', err);
         this.accounts = [];
       })
+  }
+
+  private getMarketNews() {
+    this.stockService.getMarketNews()
+      .subscribe(
+        (resp: News[]) => {
+          this.marketNews =  resp;
+        }, err => {
+        }
+      )
   }
 
   get getControl() {

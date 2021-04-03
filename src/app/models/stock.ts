@@ -18,3 +18,15 @@ export interface SearchStock {
     displaySymbol: string;
     symbol: string;
 }
+
+export interface News {
+    category: string;
+    datetime: Date | number;
+    headline: string;
+    id: number;
+    image: string;
+    related: string;
+    source: string;
+    summary: string;
+    url: string;
+}

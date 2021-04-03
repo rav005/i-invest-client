@@ -9,8 +9,8 @@
                         data-bs-target="#addAccount"><i class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
                 </div>
             </div>
-            <div *ngIf="accounts.length > 0">
 
+            <div *ngIf="accounts.length > 0">
                 <div class="card col-11 mb-2" *ngFor="let acc of accounts">
                     <div class="card-body row">
                         <!-- <div class="row"> -->
@@ -26,6 +26,22 @@
             </div>
             <div *ngIf="accounts.length == 0">
                 <p>No accounts</p>
+            </div>
+
+            <div class="row" *ngIf="marketNews && marketNews.length > 0">
+                <h4 class="col-12">News</h4>
+                <div class="card col-11 mb-2" *ngFor="let news of marketNews">
+                    <div class="card-body row">
+                        <!-- <div class="row"> -->
+                        <h5 class="card-title col-12">{{ news.headline }}</h5>
+                        <p class="card-text col-8">{{ news.category }}</p>
+                        <p class="card-text right col-4">{{ news.datetime | date }}</p>
+                        <!-- </div> -->
+                        <!-- <h6 class="card-subtitle text-muted col-12">{{ acc.currency }}</h6> -->
+                        <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
+                        <a class="col-12" href="{{ news.url }}"  target="_blank">{{ news.source }}</a>
+                    </div>
+                </div>
             </div>
         </div>
 
