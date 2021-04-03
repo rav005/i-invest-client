@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit {
           this.marketNews =  resp;
         }, err => {
         }
-      )
+      );
   }
 
   get getControl() {

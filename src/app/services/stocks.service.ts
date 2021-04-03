@@ -49,7 +49,18 @@ export class StockService {
     public getCompanyNews(symbol: String): Observable<News[]> {
         let req = { symbol: symbol };
 
-        return this.http.post<News[]>('/stock/companyNews', req);
+        return this.http.post<News[]>('/stock/companyNews', req)
+        .pipe(
+            map((resp: News[]) => {
+                if (resp?.length > 0) {
+                    resp.forEach(x => {
+                        let time = x.datetime;
+                        x.datetime =  new Date(0).setSeconds(time as number);
+                    })
+                }
+                return resp;
+            })
+        );
     }
 
     public getMarketNews(): Observable<News[]> {
@@ -64,7 +75,7 @@ export class StockService {
                 }
                 return resp;
             })
-        )
+        );
     }
 
 }

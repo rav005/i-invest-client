@@ -4,20 +4,53 @@
     <h6>{{ symbol }}</h6>
 
     <div class="row" *ngIf="stockQuote">
-        <small class="col-6"><strong>Current</strong></small>
-        <small class="col-6 right"><strong>{{ stockQuote.c | currency }}</strong></small>
+        <div class="col-4">
 
-        <small class="col-6">Open</small>
-        <small class="col-6 right">{{ stockQuote.o | currency }}</small>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Current</th>
+                        <th>{{ stockQuote.c | currency }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Open</td>
+                        <td>{{ stockQuote.o | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td>High</td>
+                        <td>{{ stockQuote.h | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td>Low</td>
+                        <td>{{ stockQuote.l | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td>Previous close</td>
+                        <td>{{ stockQuote.pc | currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        <small class="col-6">High</small>
-        <small class="col-6 right">{{ stockQuote.h | currency }}</small>
-
-        <small class="col-6">Low</small>
-        <small class="col-6 right">{{ stockQuote.l | currency }}</small>
-
-        <small class="col-6">Previous close</small>
-        <small class="col-6 right">{{ stockQuote.pc | currency }}</small>
+    <div class="row" *ngIf="marketNews && marketNews.length > 0">
+        <div class="col-6">
+            <h4 class="col-12">News</h4>
+            <div class="card col-12 mb-2" *ngFor="let news of marketNews">
+                <div class="card-body row">
+                    <!-- <div class="row"> -->
+                    <h5 class="card-title col-12">{{ news.headline }}</h5>
+                    <p class="card-text col-8">{{ news.category }}</p>
+                    <p class="card-text right col-4">{{ news.datetime | date }}</p>
+                    <!-- </div> -->
+                    <!-- <h6 class="card-subtitle text-muted col-12">{{ acc.currency }}</h6> -->
+                    <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
+                    <a class="col-12" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
