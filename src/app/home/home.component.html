@@ -39,7 +39,7 @@
                         <!-- </div> -->
                         <!-- <h6 class="card-subtitle text-muted col-12">{{ acc.currency }}</h6> -->
                         <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
-                        <a class="col-12" href="{{ news.url }}"  target="_blank">{{ news.source }}</a>
+                        <a class="col-12" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="accountName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="accountName" placeholder="5 year goal" formControlName="name">
+                        <input type="text" class="form-control" id="accountName" placeholder="5 year goal"
+                            formControlName="name">
                         <div *ngIf="getControl.name.touched && getControl.name.invalid" class="text-danger">
                             <div *ngIf="getControl.name.errors?.required">Name is required</div>
                             <div *ngIf="getControl.name.errors?.minlength">Minimum 3 character are required</div>
@@ -115,7 +116,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" >Create</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
         </div>

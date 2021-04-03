@@ -4,6 +4,9 @@
     <h6>{{ symbol }}</h6>
 
     <div class="row" *ngIf="stockQuote">
+        <small class="col-6"><strong>Current</strong></small>
+        <small class="col-6 right"><strong>{{ stockQuote.c | currency }}</strong></small>
+
         <small class="col-6">Open</small>
         <small class="col-6 right">{{ stockQuote.o | currency }}</small>
 
@@ -16,7 +19,7 @@
         <small class="col-6">Previous close</small>
         <small class="col-6 right">{{ stockQuote.pc | currency }}</small>
     </div>
-    
+
 </div>
 
 <div class="container-xl" *ngIf="errorMsg">

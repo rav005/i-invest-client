@@ -58,6 +58,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3" *ngIf="account">
+                    <p><b>Balance/Investments will not be transferred to other account and will be deleted</b></p>
                     <p>Are you sure you want to delete account <strong>{{ account.name }}</strong>?</p>
                 </div>
                 <div class="text-danger">{{ deleteErrorMsg }}</div>
