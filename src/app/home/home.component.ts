@@ -35,7 +35,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.watchList = this.auth.getWatchList();
+    this.auth.getWatchList().toPromise()
+    .then(x => this.watchList = x)
+    .catch(x => this.watchList = x);
     this.getAccounts();
     this.stockService.init();
     this.getMarketNews();
