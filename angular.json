@@ -28,12 +28,8 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-<<<<<<< HEAD
-              "src/assets"
-=======
               "src/assets",
               "src/web.config"
->>>>>>> 2009890de80b5759fcb3ec0b4fd48b9f62088346
             ],
             "styles": [
               "src/styles.scss"
