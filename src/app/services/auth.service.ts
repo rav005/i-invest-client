@@ -28,8 +28,30 @@ export class AuthService {
     return false;
   }
 
-  public getWatchList(): Stock[] {
-    return this.watchList;
+  public getWatchList(): Observable<Stock[]> {
+    if (this.watchList.length == 0) {
+      return new Observable(o => {
+        this.http.get('/stock/getWatchlist')
+        .subscribe((resp: any) => {
+          if (resp?.watchList) {
+            this.watchList = resp.watchList;
+            localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+            
+            o.next(this.watchList);
+            o.complete();
+          }
+        }, err => {
+          o.next(this.watchList);
+          o.complete();
+        });
+      });
+      
+    } else {
+      return new Observable(o => {
+        o.next(this.watchList);
+        o.complete();
+      });
+    }
   }
 
   private loadWatchlist() {
