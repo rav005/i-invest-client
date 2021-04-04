@@ -98,9 +98,9 @@ export class StockService {
         );
     }
 
-    public getRecommendations(symbol: string): Observable<Trend[]> {
+    public getRecommendations(symbol: string): Observable<any> {
         let req = { symbol: symbol };
-        return this.http.post<Trend[]>('/stock/recommendationTrends', req);
+        return this.http.post('/stock/recommendationTrends', req);
     }
 
 }

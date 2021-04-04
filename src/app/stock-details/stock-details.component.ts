@@ -21,7 +21,7 @@ export class StockDetailsComponent implements OnInit {
   marketNews: News[] = [];
   hasMoreNews: boolean = false;
   metric: Metric | null = null;
-  trends: Trend[] = [];
+  showTrendGraph: boolean = false;
 
   loading: boolean = false;
   errorMsg: string = '';
@@ -61,7 +61,7 @@ export class StockDetailsComponent implements OnInit {
 
         this.getCompanyNews();
         this.getBasicFinancials();
-        this.drawChart();
+        this.getRecommendations();
       }, err => {
         this.errorMsg = 'Failed to fetch stock details';
         this.loading = false;
@@ -106,40 +106,36 @@ export class StockDetailsComponent implements OnInit {
   private getRecommendations() {
     this.stockService.getRecommendations(this.symbol!)
     .subscribe((resp: Trend[]) => {
-      this.trends = resp;
+      this.drawChart(resp);
     }, err => {})
   }
 
 
 
-  drawChart() {
+  private drawChart(chartData: any) {
     google.charts.load('current', {'packages': ['bar']});
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-
-      var data = google.visualization.arrayToDataTable([
-        ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-         'Western', 'Literature', { role: 'annotation' } ],
-        ['2010', 10, 24, 20, 32, 18, 5, ''],
-        ['2020', 16, 22, 23, 30, 16, 9, ''],
-        ['2030', 28, 19, 29, 30, 12, 13, '']
-      ]);
+      // https://developers.google.com/chart/interactive/docs/gallery/barchart#stacked-bar-charts
+      var data = google.visualization.arrayToDataTable(chartData);
 
       const options = {
-        height: 400,
+        height: 200,
+        width: 400,
         isStacked: true,
         vAxis: {format: 'decimal'},
         hAxis: {format: ''},
         series: {
-          0: {color: '#fdd835'},
-          1: {color: '#0091ff'},
-          2: {color: '#e53935'},
-          3: {color: '#43a047'},
+          0: {color: '#ff6347'},
+          1: {color: '#3cb371'},
+          2: {color: '#ee82ee'},
+          3: {color: '#ffa500'},
+          4: {color: '#6a5acd'},
         }
       };
 
-      const chart = new google.charts.Bar(document.querySelector('#initial_chart_div'));
+      const chart = new google.charts.Bar(document.querySelector('#recommendations_chart'));
 
       chart.draw(data, google.charts.Bar.convertOptions(options));
     }
