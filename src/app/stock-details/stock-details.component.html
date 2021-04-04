@@ -4,6 +4,12 @@
     <h6>{{ symbol }}</h6>
 
     <div class="row">
+        <!-- <google-chart [title]="chart.title" [type]="chart.type" [data]="chart.data" [columns]="chart.columnNames" [options]="chart.options">
+        </google-chart> -->
+        <div #chartDiv id="initial_chart_div"></div>
+    </div>
+
+    <div class="row">
         <div class="col-4" *ngIf="stockQuote">
             <table class="table table-hover">
                 <thead>
@@ -89,6 +95,9 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="col-4">
+            <h5>Buy/Sell</h5>
         </div>
     </div>
 

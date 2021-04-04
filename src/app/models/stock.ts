@@ -46,3 +46,12 @@ export interface Metric {
     revenuePerShareAnnual: number;
     roiAnnual: number;
 }
+
+export interface Trend {
+    buy: number;
+    hold: number;
+    period: Date;
+    sell: number;
+    strongBuy: number;
+    strongSell: number;
+}

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Metric, News, SearchStock, StockQuote } from "../models/stock";
+import { Metric, News, SearchStock, StockQuote, Trend } from "../models/stock";
 
 @Injectable({
     providedIn: 'root'
@@ -96,6 +96,11 @@ export class StockService {
                 throw new Error('Basic finanicals not available');
             })
         );
+    }
+
+    public getRecommendations(symbol: string): Observable<Trend[]> {
+        let req = { symbol: symbol };
+        return this.http.post<Trend[]>('/stock/recommendationTrends', req);
     }
 
 }
