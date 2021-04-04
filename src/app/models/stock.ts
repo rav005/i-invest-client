@@ -32,9 +32,17 @@ export interface News {
 }
 
 export interface Metric {
-    TenDayAverageTradingVolume: number;
     YearHigh: number;
+    YearHighDate: Date;
     YearLow: number;
     YearLowDate: Date;
-    YearPriceReturnDaily: number;
+    cashFlowPerShareAnnual: number;
+    currentRatioAnnual: number;
+    dividendPerShareAnnual: number;
+    dividendPerShare5Y: number;
+    dividendYield5Y: number;
+    grossMarginAnnual: number;
+    marketCapitalization: number;
+    revenuePerShareAnnual: number;
+    roiAnnual: number;
 }

@@ -14,7 +14,9 @@ export class StockDetailsComponent implements OnInit {
   symbol: string | null = null;
   name: string | null = null;
   
+  filterMarketNews: News[] = [];
   marketNews: News[] = [];
+  hasMoreNews: boolean = false;
   metric: Metric | null = null;
 
   loading: boolean = false;
@@ -50,6 +52,12 @@ export class StockDetailsComponent implements OnInit {
       .subscribe(
         (resp: News[]) => {
           this.marketNews =  resp;
+          if (this.marketNews.length > 0) {
+            this.filterMarketNews = this.marketNews.slice(0, 5);
+            if (this.marketNews.length > 5) {
+              this.hasMoreNews = true;
+            }
+          }
         }, err => {
         }
       );
@@ -59,7 +67,17 @@ export class StockDetailsComponent implements OnInit {
     this.stockService.getBasicFinancials(this.symbol!)
       .subscribe((resp: Metric) => {
         this.metric = resp;
+        console.log('metric');
       }, err => {})
+  }
+
+  getMoreNews() {
+    let fl = this.filterMarketNews.length;
+    let max = this.marketNews.length;
+    this.filterMarketNews = this.marketNews.slice(0, fl + 5);
+    if (fl + 5 >= max){
+      this.hasMoreNews = false;
+    }
   }
 
 }

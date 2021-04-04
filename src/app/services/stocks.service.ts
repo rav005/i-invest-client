@@ -83,14 +83,14 @@ export class StockService {
         return this.http.post<Metric>('/stock/basicFinancials', req)
         .pipe(
             map((resp: any) => {
-                if (resp.metric) {
-                    return <Metric>{
-                        TenDayAverageTradingVolume: resp.metric["10DayAverageTradingVolume"],
-                        YearHigh: resp.metric["52WeekHigh"],
-                        YearLow: resp.metric["52WeekLow"],
-                        YearLowDate: resp.metric["52WeekLowDate"],
-                        YearPriceReturnDaily: resp.metric["52WeekPriceReturnDaily"]
-                    };
+                if (resp) {
+                    let metric: Metric = <Metric>resp;
+                    metric.YearHigh = resp["52WeekHigh"];
+                    metric.YearHighDate = resp["52WeekHighDate"];
+                    metric.YearLow = resp["52WeekLow"];
+                    metric.YearLowDate = resp["52WeekLowDate"];
+
+                    return metric;
                 }
 
                 throw new Error('Basic finanicals not available');
