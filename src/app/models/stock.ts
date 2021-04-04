@@ -30,3 +30,11 @@ export interface News {
     summary: string;
     url: string;
 }
+
+export interface Metric {
+    TenDayAverageTradingVolume: number;
+    YearHigh: number;
+    YearLow: number;
+    YearLowDate: Date;
+    YearPriceReturnDaily: number;
+}

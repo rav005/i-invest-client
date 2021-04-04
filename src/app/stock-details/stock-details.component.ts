@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { News, StockQuote } from '../models/stock';
+import { Metric, News, StockQuote } from '../models/stock';
 import { StockService } from '../services/stocks.service';
 
 @Component({
@@ -13,7 +13,9 @@ export class StockDetailsComponent implements OnInit {
   stockQuote: StockQuote | null = null;
   symbol: string | null = null;
   name: string | null = null;
+  
   marketNews: News[] = [];
+  metric: Metric | null = null;
 
   loading: boolean = false;
   errorMsg: string = '';
@@ -31,7 +33,9 @@ export class StockDetailsComponent implements OnInit {
       .subscribe(resp => {
         this.stockQuote = resp;
         this.loading = false;
+
         this.getCompanyNews();
+        this.getBasicFinancials();
       }, err => {
         this.errorMsg = 'Failed to fetch stock details';
         this.loading = false;
@@ -49,6 +53,13 @@ export class StockDetailsComponent implements OnInit {
         }, err => {
         }
       );
+  }
+
+  private getBasicFinancials() {
+    this.stockService.getBasicFinancials(this.symbol!)
+      .subscribe((resp: Metric) => {
+        this.metric = resp;
+      }, err => {})
   }
 
 }

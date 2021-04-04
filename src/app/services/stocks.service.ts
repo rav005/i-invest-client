@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { News, SearchStock, StockQuote } from "../models/stock";
+import { Metric, News, SearchStock, StockQuote } from "../models/stock";
 
 @Injectable({
     providedIn: 'root'
@@ -74,6 +74,26 @@ export class StockService {
                     })
                 }
                 return resp;
+            })
+        );
+    }
+
+    public getBasicFinancials(symbol: String): Observable<Metric> {
+        let req = { symbol: symbol };
+        return this.http.post<Metric>('/stock/basicFinancials', req)
+        .pipe(
+            map((resp: any) => {
+                if (resp.metric) {
+                    return <Metric>{
+                        TenDayAverageTradingVolume: resp.metric["10DayAverageTradingVolume"],
+                        YearHigh: resp.metric["52WeekHigh"],
+                        YearLow: resp.metric["52WeekLow"],
+                        YearLowDate: resp.metric["52WeekLowDate"],
+                        YearPriceReturnDaily: resp.metric["52WeekPriceReturnDaily"]
+                    };
+                }
+
+                throw new Error('Basic finanicals not available');
             })
         );
     }

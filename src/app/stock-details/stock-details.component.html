@@ -3,9 +3,8 @@
     <h2>{{ name }}</h2>
     <h6>{{ symbol }}</h6>
 
-    <div class="row" *ngIf="stockQuote">
-        <div class="col-4">
-
+    <div class="row">
+        <div class="col-4" *ngIf="stockQuote">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -33,6 +32,28 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-4" *ngIf="metric">
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <td>Avg trading vol (10D)</td>
+                        <td>{{ metric.TenDayAverageTradingVolume }}</td>
+                    </tr>
+                    <tr>
+                        <td>52W High</td>
+                        <td>{{ metric.YearHigh }}</td>
+                    </tr>
+                    <tr>
+                        <td>52W Low</td>
+                        <td>{{ metric.YearLow }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="row" *ngIf="marketNews && marketNews.length > 0">
@@ -40,14 +61,13 @@
             <h4 class="col-12">News</h4>
             <div class="card col-12 mb-2" *ngFor="let news of marketNews">
                 <div class="card-body row">
-                    <!-- <div class="row"> -->
                     <h5 class="card-title col-12">{{ news.headline }}</h5>
-                    <p class="card-text col-8">{{ news.category }}</p>
-                    <p class="card-text right col-4">{{ news.datetime | date }}</p>
-                    <!-- </div> -->
-                    <!-- <h6 class="card-subtitle text-muted col-12">{{ acc.currency }}</h6> -->
+
+                    <img *ngIf="news.image" class="col-12" src="{{ news.image }}" />
+
                     <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
-                    <a class="col-12" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
+                    <a class="col-8" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
+                    <div class="card-text right col-4">{{ news.datetime | date }}</div>
                 </div>
             </div>
         </div>
