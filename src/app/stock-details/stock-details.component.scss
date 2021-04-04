@@ -3,6 +3,15 @@
     text-align: right;
 }
 
+h2 {
+    margin-bottom: 1.5rem;
+
+    .bi-star, .bi-star-fill {
+        color: blue;
+        cursor: pointer;
+    }
+}
+
 .card {
     .card-text {
         margin-bottom: 5px;

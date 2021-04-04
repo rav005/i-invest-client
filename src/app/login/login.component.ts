@@ -101,7 +101,11 @@ export class LoginComponent implements OnInit {
             this.errorMsg = 'Failed to create account';
           }
         }, err => {
-          this.errorMsg = 'Failed to create account';
+          if (err.error.msg) {
+            this.errorMsg = err.error.msg;
+          } else {
+            this.errorMsg = 'Failed to create account';
+          }
           console.log('signup error: ', err);
         });
     } else {

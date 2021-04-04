@@ -78,7 +78,7 @@ export class ViewAccountComponent implements OnInit {
   updateFunds() {
     this.updateFundsForm.markAllAsTouched();
     if (this.updateFundsForm.valid) {
-      let amount = -this.account!.balance;
+      let amount = this.account!.balance;
       if (isNaN(this.updateFundsForm.value.balance)) {
         this.modelErrorMsg = 'Invalid amount';
         return;

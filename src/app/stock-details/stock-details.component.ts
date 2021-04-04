@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Metric, News, StockQuote, Trend } from '../models/stock';
+import { AuthService } from '../services/auth.service';
 import { StockService } from '../services/stocks.service';
 
 declare let google: any;
@@ -23,30 +24,13 @@ export class StockDetailsComponent implements OnInit {
   metric: Metric | null = null;
   showTrendGraph: boolean = false;
 
+  watchlisted: boolean = false;
+
   loading: boolean = false;
   errorMsg: string = '';
 
-  chart: any = {
-    title: 'Check Chart',
-    type: 'BarChart',
-    columns: ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-    'Western', 'Literature' ],
-    data: [
-      ['2010', 10, 24, 20, 32, 18, 5],
-      ['2020', 16, 22, 23, 30, 16, 9],
-      ['2030', 28, 19, 29, 30, 12, 13]
-    ],
-    options: {
-      width: 600,
-      height: 400,
-      legend: { position: 'top', maxLines: 3 },
-      bar: { groupWidth: '75%' },
-      isStacked: true
-    }
-  };
-
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
-    private stockService: StockService) { }
+    private stockService: StockService, private authServ: AuthService) { }
 
   ngOnInit(): void {
     this.symbol = this.activatedroute.snapshot.paramMap.get('symbol');
@@ -66,6 +50,16 @@ export class StockDetailsComponent implements OnInit {
         this.errorMsg = 'Failed to fetch stock details';
         this.loading = false;
       });
+
+      this.authServ.getWatchList().toPromise()
+      .then(w => {
+        let s = w.find(x => x.symbol === this.symbol);
+        if(s) {
+          this.watchlisted = true;
+        } else {
+          this.watchlisted = false;
+        }
+      }).catch(e => {})
     } else {
       this.router.navigate(['']);
     }
@@ -111,7 +105,6 @@ export class StockDetailsComponent implements OnInit {
   }
 
 
-
   private drawChart(chartData: any) {
     google.charts.load('current', {'packages': ['bar']});
     google.charts.setOnLoadCallback(drawChart);
@@ -139,6 +132,10 @@ export class StockDetailsComponent implements OnInit {
 
       chart.draw(data, google.charts.Bar.convertOptions(options));
     }
+  }
+
+  toggleWatchlist() {
+    
   }
 
 }
