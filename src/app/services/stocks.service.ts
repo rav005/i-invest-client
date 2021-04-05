@@ -12,7 +12,7 @@ export class StockService {
     private data: SearchStock[] = [];
 
     constructor(private http: HttpClient, private auth: AuthService) {
-        let ld = sessionStorage.getItem('stocksData');
+        let ld = localStorage.getItem('stocksData');
         if (ld) {
             this.data = JSON.parse(ld);
         }
@@ -23,7 +23,7 @@ export class StockService {
             this.http.get('/main/getStocksfile')
                 .subscribe(resp => {
                     this.data = <any[]>resp;
-                    sessionStorage.setItem('stocksData', JSON.stringify(resp));
+                    localStorage.setItem('stocksData', JSON.stringify(resp));
                 }, err => {
                     console.log('failed to load file: ', err);
                 });
