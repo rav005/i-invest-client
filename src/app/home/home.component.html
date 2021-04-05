@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-8">
             <div class="row">
-                <h4 class="col-7">Accounts</h4>
+                <h4 class="col-8">Accounts</h4>
                 <div class="col-4">
                     <button type="button" class="btn btn-link right" data-bs-toggle="modal"
                         data-bs-target="#addAccount"><i class="bi bi-plus-circle"></i>&nbsp;Add Account</button>
@@ -11,7 +11,7 @@
             </div>
 
             <div *ngIf="accounts.length > 0">
-                <div class="card col-11 mb-2" *ngFor="let acc of accounts">
+                <div class="card col-12 mb-2" *ngFor="let acc of accounts">
                     <div class="card-body row">
                         <!-- <div class="row"> -->
                         <h5 class="card-title col-8">{{ acc.name }}</h5>
@@ -51,10 +51,11 @@
             </div>
         </div>
 
-        <div class="col-3 watchList" *ngIf="watchList && watchList.length > 0">
+        <div class="col-3 offset-1 watchList" *ngIf="watchList && watchList.length > 0">
             <h4>Watchlist</h4>
-            <div class="card mb-2" *ngFor="let s of watchList" (click)="view(s.symbol, s.name)">
-                <div class="card-body">
+            <div class="card mb-2" *ngFor="let s of watchList">
+                <i class="bi bi-x-circle" (click)="removeWatchlist(s.symbol)"></i>
+                <div class="card-body" (click)="view(s.symbol, s.name)">
                     <div class="row">
                         <h5 class="card-title col-6">{{ s.symbol }}</h5>
                         <p class="card-text right col-6" *ngIf="s.data && s.data.c">{{ s.data.c | currency }}</p>

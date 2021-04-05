@@ -51,7 +51,7 @@ export class StockDetailsComponent implements OnInit {
         this.loading = false;
       });
 
-      this.stockService.getWatchList().toPromise()
+      this.stockService.getWatchList(false).toPromise()
       .then(w => {
         let s = w.find(x => x.symbol === this.symbol);
         if(s) {

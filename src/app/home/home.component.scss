@@ -15,6 +15,22 @@
 }
 
 .watchList {
+    .bi-x-circle {
+        float: left;
+        position: absolute;
+        top: -15px;
+        font-size: 20px;
+        left: -10px;
+        color: #0d6efd;
+        display: none;
+    }
+
+    .card:hover {
+        .bi-x-circle {
+            display: block;
+        }
+    }
+
     .card {
         cursor: pointer;
     }
@@ -23,10 +39,6 @@
 .marketNews {
     .card {
         .card-text {
-            margin-bottom: 5px;
-        }
-        
-        .img {
             margin-bottom: 5px;
         }
     }

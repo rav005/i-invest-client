@@ -68,8 +68,8 @@ export class StockService {
         });
     }
 
-    public getWatchList(): Observable<Stock[]> {
-        if (this.watchList.length == 0) {
+    public getWatchList(reload: boolean): Observable<Stock[]> {
+        if (this.watchList.length == 0 || reload) {
             return this.reloadWatchList();
         } else {
             return new Observable(o => {
@@ -153,7 +153,11 @@ export class StockService {
 
         return this.http.post<boolean>(url, req)
             .pipe(map(resp => {
-                this.reloadWatchList().toPromise();
+                if (add) {
+                    this.reloadWatchList().toPromise();
+                } else {
+                    this.watchList = this.watchList.filter(w => w.symbol != symbol);
+                }
                 return true;
             }));
     }

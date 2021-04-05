@@ -93,6 +93,10 @@ export class LoginComponent implements OnInit {
   signup() {
     this.errorMsg = '';
     if (this.username.valid && this.password.valid && this.secQuestion.valid && this.secQuestionAns.valid) {
+      if (this.username.value.length < 5) {
+        this.errorMsg = 'Username requires minimum of 5 characters';
+        return;
+      }
       this.auth.signup(this.username.value, this.password.value, this.secQuestion.value, this.secQuestionAns.value)
         .subscribe(resp => {
           if (resp) {

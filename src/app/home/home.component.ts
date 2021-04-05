@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stockService.getWatchList().toPromise()
+    this.stockService.getWatchList(true).toPromise()
     .then(x => this.watchList = x)
     .catch(x => this.watchList = x);
     this.getAccounts();
@@ -100,6 +100,13 @@ export class HomeComponent implements OnInit {
         });
       
     }
+  }
+
+  removeWatchlist(symbol: string) {
+    this.stockService.toggleWatchlist(symbol, '', false).toPromise()
+    .then(x => {
+      this.watchList = this.watchList.filter(w => w.symbol != symbol);
+    }).catch(e => {});
   }
 
   viewAccount(account: Account) {
