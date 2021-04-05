@@ -35,7 +35,6 @@ export class StockDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.symbol = this.activatedroute.snapshot.paramMap.get('symbol');
     this.name = this.activatedroute.snapshot.paramMap.get('name');
-
     if (this.symbol) {
       this.loading = true;
       this.stockService.getStock(this.symbol)
@@ -46,6 +45,7 @@ export class StockDetailsComponent implements OnInit {
         this.getCompanyNews();
         this.getBasicFinancials();
         this.getRecommendations();
+        this.getHistoricalData();
       }, err => {
         this.errorMsg = 'Failed to fetch stock details';
         this.loading = false;
@@ -104,6 +104,32 @@ export class StockDetailsComponent implements OnInit {
     }, err => {})
   }
 
+  private getHistoricalData() {
+    this.stockService.getHistoricalData(this.symbol!).toPromise()
+    .then(data => this.drawHistGraph(data));
+  }
+
+  private drawHistGraph(chartData: any) {
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+        console.log('line data: ', data);
+        var options = {
+          chart: {
+            title: 'Historical data'
+          }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+
+        
+      }
+  }
+
 
   private drawChart(chartData: any) {
     google.charts.load('current', {'packages': ['bar']});
@@ -114,8 +140,6 @@ export class StockDetailsComponent implements OnInit {
       var data = google.visualization.arrayToDataTable(chartData);
 
       const options = {
-        height: 200,
-        width: 400,
         isStacked: true,
         vAxis: {format: 'decimal'},
         hAxis: {format: ''},

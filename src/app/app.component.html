@@ -16,7 +16,19 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-outline-danger right" (click)="logout()">Logout</button>
+      <div class="right">
+        <button class="btn btn-outline-danger right" (click)="logout()">Logout</button>
+        <div class="nav-item dropdown right">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            User
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
 </nav>
 <router-outlet></router-outlet>

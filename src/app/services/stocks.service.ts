@@ -142,6 +142,11 @@ export class StockService {
         return this.http.post('/stock/recommendationTrends', req);
     }
 
+    public getHistoricalData(symbol: string): Observable<any> {
+        let req = { symbol: symbol };
+        return this.http.post('/stock/historical', req);
+    }
+
     public toggleWatchlist(symbol: string, name: string, add: boolean): Observable<boolean> {
         let req = { symbol: symbol, stockName: name };
         let url = '';
