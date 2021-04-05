@@ -45,9 +45,9 @@
             </div>
         </div>
 
-        <div class="col-3" *ngIf="watchList && watchList.length > 0">
+        <div class="col-3 watchList" *ngIf="watchList && watchList.length > 0">
             <h4>Watchlist</h4>
-            <div class="card mb-2" *ngFor="let s of watchList">
+            <div class="card mb-2" *ngFor="let s of watchList" (click)="view(s.symbol, s.name)">
                 <div class="card-body">
                     <div class="row">
                         <h5 class="card-title col-6">{{ s.symbol }}</h5>

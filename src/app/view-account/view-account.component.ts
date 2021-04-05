@@ -24,7 +24,7 @@ export class ViewAccountComponent implements OnInit {
 
   updateFundsForm: FormGroup;
 
-  constructor(private _Activatedroute: ActivatedRoute, private router: Router, 
+  constructor(private activatedroute: ActivatedRoute, private router: Router, 
     private accountServ: AccountService) { 
 
       this.updateFundsForm = new FormGroup({
@@ -33,7 +33,7 @@ export class ViewAccountComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    const id = this._Activatedroute.snapshot.paramMap.get('id');
+    const id = this.activatedroute.snapshot.paramMap.get('id');
     if (id) {
       this.accountServ.getAccount(id)
         .subscribe((resp: Account) => {

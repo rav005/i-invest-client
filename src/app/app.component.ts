@@ -37,7 +37,11 @@ export class AppComponent {
   }
 
   view(symbol: string, name: string) {
-    this.router.navigate(['stock', symbol, name]);
+    this.router.navigate(['stock', symbol, name]).then(r => {
+      if (this.router.url.includes('/stock/')) {
+        window.location.reload();
+      }
+    });
   }
 
   @HostListener('document:mousedown', ['$event'])

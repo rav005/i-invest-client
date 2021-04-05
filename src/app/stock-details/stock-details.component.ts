@@ -135,7 +135,10 @@ export class StockDetailsComponent implements OnInit {
   }
 
   toggleWatchlist() {
-    
+    this.stockService.toggleWatchlist(this.symbol!, this.name!, !this.watchlisted)
+    .subscribe(resp => {
+      this.watchlisted = !this.watchlisted;
+    }, err => { });
   }
 
 }

@@ -89,4 +89,8 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/account/' + account._id]);
   }
 
+  view(symbol: string, name: string) {
+    this.router.navigate(['/stock', symbol, name]);
+  }
+
 }

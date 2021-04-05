@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Metric, News, SearchStock, StockQuote, Trend } from "../models/stock";
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,7 @@ import { Metric, News, SearchStock, StockQuote, Trend } from "../models/stock";
 export class StockService {
     private data: SearchStock[] = [];
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private auth: AuthService) {
         let ld = localStorage.getItem('stocksData');
         if (ld) {
             this.data = JSON.parse(ld);
@@ -101,6 +102,22 @@ export class StockService {
     public getRecommendations(symbol: string): Observable<any> {
         let req = { symbol: symbol };
         return this.http.post('/stock/recommendationTrends', req);
+    }
+
+    public toggleWatchlist(symbol: string, name: string, add: boolean): Observable<boolean> {
+        let req = { symbol: symbol, stockName: name };
+        let url = '';
+        if (add) {
+            url = '/stock/addToWatchlist';
+        } else {
+            url = '/stock/removeFromWatchlist';
+        }
+
+        return this.http.post<boolean>(url, req)
+            .pipe(map(resp => {
+                this.auth.reloadWatchList().toPromise();
+                return true;
+            }));
     }
 
 }
