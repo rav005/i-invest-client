@@ -12,7 +12,7 @@ export class StockService {
     private data: SearchStock[] = [];
 
     constructor(private http: HttpClient, private auth: AuthService) {
-        let ld = localStorage.getItem('stocksData');
+        let ld = sessionStorage.getItem('stocksData');
         if (ld) {
             this.data = JSON.parse(ld);
         }
@@ -21,12 +21,12 @@ export class StockService {
     public init() {
         if (this.data.length == 0) {
             this.http.get('/main/getStocksfile')
-            .subscribe(resp => {
-                this.data = <any[]>resp;
-                localStorage.setItem('stocksData', JSON.stringify(resp));
-            }, err => {
-                console.log('failed to load file: ', err);
-            });
+                .subscribe(resp => {
+                    this.data = <any[]>resp;
+                    sessionStorage.setItem('stocksData', JSON.stringify(resp));
+                }, err => {
+                    console.log('failed to load file: ', err);
+                });
         }
     }
 
@@ -37,7 +37,7 @@ export class StockService {
 
         tickers = this.data.filter(x => x.symbol.match(regex));
         description = this.data.filter(x => x.description.match(regex));
-        
+
         return tickers.concat(description);
     }
 
@@ -51,52 +51,52 @@ export class StockService {
         let req = { symbol: symbol };
 
         return this.http.post<News[]>('/stock/companyNews', req)
-        .pipe(
-            map((resp: News[]) => {
-                if (resp?.length > 0) {
-                    resp.forEach(x => {
-                        let time = x.datetime;
-                        x.datetime =  new Date(0).setSeconds(time as number);
-                    })
-                }
-                return resp;
-            })
-        );
+            .pipe(
+                map((resp: News[]) => {
+                    if (resp?.length > 0) {
+                        resp.forEach(x => {
+                            let time = x.datetime;
+                            x.datetime = new Date(0).setSeconds(time as number);
+                        })
+                    }
+                    return resp;
+                })
+            );
     }
 
     public getMarketNews(): Observable<News[]> {
         return this.http.get<News[]>('/main/marketNews')
-        .pipe(
-            map((resp: News[]) => {
-                if (resp?.length > 0) {
-                    resp.forEach(x => {
-                        let time = x.datetime;
-                        x.datetime =  new Date(0).setSeconds(time as number);
-                    })
-                }
-                return resp;
-            })
-        );
+            .pipe(
+                map((resp: News[]) => {
+                    if (resp?.length > 0) {
+                        resp.forEach(x => {
+                            let time = x.datetime;
+                            x.datetime = new Date(0).setSeconds(time as number);
+                        })
+                    }
+                    return resp;
+                })
+            );
     }
 
     public getBasicFinancials(symbol: String): Observable<Metric> {
         let req = { symbol: symbol };
         return this.http.post<Metric>('/stock/basicFinancials', req)
-        .pipe(
-            map((resp: any) => {
-                if (resp) {
-                    let metric: Metric = <Metric>resp;
-                    metric.YearHigh = resp["52WeekHigh"];
-                    metric.YearHighDate = resp["52WeekHighDate"];
-                    metric.YearLow = resp["52WeekLow"];
-                    metric.YearLowDate = resp["52WeekLowDate"];
+            .pipe(
+                map((resp: any) => {
+                    if (resp) {
+                        let metric: Metric = <Metric>resp;
+                        metric.YearHigh = resp["52WeekHigh"];
+                        metric.YearHighDate = resp["52WeekHighDate"];
+                        metric.YearLow = resp["52WeekLow"];
+                        metric.YearLowDate = resp["52WeekLowDate"];
 
-                    return metric;
-                }
+                        return metric;
+                    }
 
-                throw new Error('Basic finanicals not available');
-            })
-        );
+                    throw new Error('Basic finanicals not available');
+                })
+            );
     }
 
     public getRecommendations(symbol: string): Observable<any> {

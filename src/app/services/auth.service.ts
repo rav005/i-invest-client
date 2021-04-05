@@ -12,12 +12,12 @@ export class AuthService {
   private watchList: Stock[] = [];
 
   constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-    let watchlist = localStorage.getItem('watchlist');
+    this.token = sessionStorage.getItem('token');
+    let watchlist = sessionStorage.getItem('watchlist');
     if (watchlist) {
       try {
         this.watchList = JSON.parse(watchlist);
-      } catch(err) {}
+      } catch (err) { }
     }
   }
 
@@ -31,25 +31,25 @@ export class AuthService {
   public reloadWatchList(): Observable<Stock[]> {
     return new Observable(o => {
       this.http.get('/stock/getWatchlist')
-      .subscribe((resp: any) => {
-        if (resp?.watchList) {
-          this.watchList = resp.watchList;
-          localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
-          
+        .subscribe((resp: any) => {
+          if (resp?.watchList) {
+            this.watchList = resp.watchList;
+            sessionStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+
+            o.next(this.watchList);
+            o.complete();
+          }
+        }, err => {
           o.next(this.watchList);
           o.complete();
-        }
-      }, err => {
-        o.next(this.watchList);
-        o.complete();
-      });
+        });
     });
   }
 
   public getWatchList(): Observable<Stock[]> {
     if (this.watchList.length == 0) {
       return this.reloadWatchList();
-      
+
     } else {
       return new Observable(o => {
         o.next(this.watchList);
@@ -63,9 +63,9 @@ export class AuthService {
       .subscribe((resp: any) => {
         if (resp?.watchList) {
           this.watchList = resp.watchList;
-          localStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+          sessionStorage.setItem('watchlist', JSON.stringify(resp.watchList));
         }
-      }, err => {});
+      }, err => { });
   }
 
   public login(username: string, password: string): Observable<any> {
@@ -79,7 +79,7 @@ export class AuthService {
         map((resp: any) => {
           if (resp?.token) {
             this.token = resp.token;
-            localStorage.setItem('token', resp.token);
+            sessionStorage.setItem('token', resp.token);
             //sessionStorage.setItem('keys', JSON.stringify(resp.keys));
             this.loadWatchlist();
             return true;
@@ -110,7 +110,7 @@ export class AuthService {
         map((resp: any) => {
           if (resp?.token) {
             this.token = resp.token;
-            localStorage.setItem('token', resp.token);
+            sessionStorage.setItem('token', resp.token);
             return true;
           } else {
             throw resp;

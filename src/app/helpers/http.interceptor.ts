@@ -9,26 +9,26 @@ import { Router } from "@angular/router";
 })
 export class HttpRequestInterceptor implements HttpInterceptor {
     constructor(private router: Router) { }
-    
+
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const apiUrl = environment.apiUrl;
 
-        const authToken = localStorage.getItem('token');
-        
+        const authToken = sessionStorage.getItem('token');
+
         if (authToken) {
             var tData = authToken.split('.')[1];
             let tokenValue = JSON.parse(window.atob(tData));
             const d = new Date(tokenValue.exp * 1000);
             if (new Date().getTime() > d.getTime()) {
-                localStorage.clear();
+                sessionStorage.clear();
                 window.location.reload();
             }
-            
+
             const authReq = req.clone({
                 url: apiUrl + req.url,
                 headers: req.headers.set('Authorization', authToken)
             });
-            
+
             return next.handle(authReq);
         } else {
             const urlReq = req.clone({
