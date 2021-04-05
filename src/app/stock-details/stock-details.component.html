@@ -108,17 +108,21 @@
     </div>
 
     <div class="row" *ngIf="filterMarketNews && filterMarketNews.length > 0">
-        <div class="col-6">
+        <div class="col-8">
             <h4 class="col-12">News</h4>
             <div class="card col-12 mb-2" *ngFor="let news of filterMarketNews">
                 <div class="card-body row">
-                    <h5 class="card-title col-12">{{ news.headline }}</h5>
-
-                    <img *ngIf="news.image" class="col-12 img" src="{{ news.image }}" />
-
-                    <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
-                    <a class="col-8" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
-                    <div class="card-text right col-4">{{ news.datetime | date }}</div>
+                    <div class="card-body row">
+                        <img *ngIf="news.image" class="col-6 img" src="{{ news.image }}" />
+                        <div class="col-6">
+                            <h5 class="card-title col-12">{{ news.headline }}</h5>
+                            <p class="card-subtitle text-muted col-12">{{ news.summary }}</p>
+                            
+                            
+                            <a class="col-8" href="{{ news.url }}" target="_blank">{{ news.source }}</a>
+                            <div class="card-text right col-4">{{ news.datetime | date }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div *ngIf="hasMoreNews" class="d-grid gap-2 d-md-flex justify-content-md-end">
