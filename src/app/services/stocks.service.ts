@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Metric, News, SearchStock, StockQuote, Trend } from "../models/stock";
+import { Metric, News, SearchStock, Stock, StockQuote } from "../models/stock";
 import { AuthService } from "./auth.service";
 
 @Injectable({
@@ -10,12 +10,21 @@ import { AuthService } from "./auth.service";
 })
 export class StockService {
     private data: SearchStock[] = [];
-
-    constructor(private http: HttpClient, private auth: AuthService) {
+    private watchList: Stock[] = [];
+    
+    constructor(private http: HttpClient) {
         let ld = localStorage.getItem('stocksData');
         if (ld) {
             this.data = JSON.parse(ld);
         }
+
+        let watchlist = sessionStorage.getItem('watchlist');
+        if (watchlist) {
+            try {
+                this.watchList = JSON.parse(watchlist);
+            } catch (err) { }
+        }
+        
     }
 
     public init() {
@@ -39,6 +48,35 @@ export class StockService {
         description = this.data.filter(x => x.description.match(regex));
 
         return tickers.concat(description);
+    }
+
+    private reloadWatchList(): Observable<Stock[]> {
+        return new Observable(o => {
+        this.http.get('/stock/getWatchlist')
+            .subscribe((resp: any) => {
+            if (resp?.watchList) {
+                this.watchList = resp.watchList;
+                sessionStorage.setItem('watchlist', JSON.stringify(resp.watchList));
+
+                o.next(this.watchList);
+                o.complete();
+            }
+            }, err => {
+                o.next(this.watchList);
+                o.complete();
+            });
+        });
+    }
+
+    public getWatchList(): Observable<Stock[]> {
+        if (this.watchList.length == 0) {
+            return this.reloadWatchList();
+        } else {
+            return new Observable(o => {
+                o.next(this.watchList);
+                o.complete();
+            });
+        }
     }
 
     public getStock(symbol: String): Observable<StockQuote> {
@@ -115,7 +153,7 @@ export class StockService {
 
         return this.http.post<boolean>(url, req)
             .pipe(map(resp => {
-                this.auth.reloadWatchList().toPromise();
+                this.reloadWatchList().toPromise();
                 return true;
             }));
     }

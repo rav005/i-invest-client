@@ -2,22 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Stock } from '../models/stock';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private token: string | null;
-  private watchList: Stock[] = [];
+  public isLoggedIn$: Subject<boolean> = new Subject();
 
   constructor(private http: HttpClient) {
     this.token = sessionStorage.getItem('token');
-    let watchlist = sessionStorage.getItem('watchlist');
-    if (watchlist) {
-      try {
-        this.watchList = JSON.parse(watchlist);
-      } catch (err) { }
+    if (this.token) {
+      this.isLoggedIn$.next(true);
     }
   }
 
@@ -26,46 +22,6 @@ export class AuthService {
       return true;
     }
     return false;
-  }
-
-  public reloadWatchList(): Observable<Stock[]> {
-    return new Observable(o => {
-      this.http.get('/stock/getWatchlist')
-        .subscribe((resp: any) => {
-          if (resp?.watchList) {
-            this.watchList = resp.watchList;
-            sessionStorage.setItem('watchlist', JSON.stringify(resp.watchList));
-
-            o.next(this.watchList);
-            o.complete();
-          }
-        }, err => {
-          o.next(this.watchList);
-          o.complete();
-        });
-    });
-  }
-
-  public getWatchList(): Observable<Stock[]> {
-    if (this.watchList.length == 0) {
-      return this.reloadWatchList();
-
-    } else {
-      return new Observable(o => {
-        o.next(this.watchList);
-        o.complete();
-      });
-    }
-  }
-
-  private loadWatchlist() {
-    this.http.get('/stock/getWatchlist')
-      .subscribe((resp: any) => {
-        if (resp?.watchList) {
-          this.watchList = resp.watchList;
-          sessionStorage.setItem('watchlist', JSON.stringify(resp.watchList));
-        }
-      }, err => { });
   }
 
   public login(username: string, password: string): Observable<any> {
@@ -80,8 +36,7 @@ export class AuthService {
           if (resp?.token) {
             this.token = resp.token;
             sessionStorage.setItem('token', resp.token);
-            //sessionStorage.setItem('keys', JSON.stringify(resp.keys));
-            this.loadWatchlist();
+            this.isLoggedIn$.next(true);
             return true;
           }
           return false;
@@ -91,7 +46,7 @@ export class AuthService {
 
   public logout() {
     this.token = null;
-    this.watchList = [];
+    this.isLoggedIn$.next(false);
     localStorage.clear();
     sessionStorage.clear();
     window.location.reload();

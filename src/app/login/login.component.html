@@ -4,27 +4,29 @@
             <img src="../../assets/logo.png" alt="i-invest logo">
         </div>
         <div *ngIf="signIn">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': username.invalid && username.touched }" 
-                    [formControl]="username" id="username" placeholder="Username">
-                <label for="username">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" [ngClass]="{ 'is-invalid': password.invalid && password.touched }" 
-                    [formControl]="password" id="password" placeholder="Password">
-                <label for="password">Password</label>
-            </div>
-            <div class="form-floating mb-3" *ngIf="errorMsg.length > 0">
-                <p class="error">{{ errorMsg }}</p>
-            </div>
-            <div class="form-floating mb-3" *ngIf="successMsg.length > 0">
-                <p class="success">{{ successMsg }}</p>
-            </div>
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" [disabled]="serverDown == true" (click)="login()">Login</button>
-                <button type="button" class="btn btn-link"  [disabled]="serverDown == true" (click)="toggleOption('forgetpassword')">Forgot Password</button>
-                <button type="button" class="btn btn-link right" [disabled]="serverDown == true" (click)="toggleOption('signup')">Sign up</button>
-            </div>
+            <form (ngSubmit)="login()">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" [ngClass]="{ 'is-invalid': username.invalid && username.touched }" 
+                        [formControl]="username" id="username" placeholder="Username">
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" [ngClass]="{ 'is-invalid': password.invalid && password.touched }" 
+                        [formControl]="password" id="password" placeholder="Password">
+                    <label for="password">Password</label>
+                </div>
+                <div class="form-floating mb-3" *ngIf="errorMsg.length > 0">
+                    <p class="error">{{ errorMsg }}</p>
+                </div>
+                <div class="form-floating mb-3" *ngIf="successMsg.length > 0">
+                    <p class="success">{{ successMsg }}</p>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary" [disabled]="serverDown == true">Login</button>
+                    <button type="button" class="btn btn-link"  [disabled]="serverDown == true" (click)="toggleOption('forgetpassword')">Forgot Password</button>
+                    <button type="button" class="btn btn-link right" [disabled]="serverDown == true" (click)="toggleOption('signup')">Sign up</button>
+                </div>
+            </form>
         </div>
         <div *ngIf="forgetPassword">
             <div class="form-floating mb-3">

@@ -5,7 +5,7 @@
         I-Invest
       </a>
 
-      <div class="col-4 align-items-center">
+      <div class="col-4 align-items-center" *ngIf="userAuthenticated | async">
         <input type="text" #searchInputEle id="search" [(ngModel)]="searchText" class="form-control" placeholder="Search" (keyup)="search()">
         <div #searchResultEle class="searchResult col-4" *ngIf="searchResult.length > 0">
           <div class="card stock" *ngFor="let s of searchResult">
@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-outline-danger right" (click)="logout()">Logout</button>
+      <button class="btn btn-outline-danger right" *ngIf="userAuthenticated | async" (click)="logout()">Logout</button>
     </div>
 </nav>
 <router-outlet></router-outlet>

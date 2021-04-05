@@ -30,7 +30,7 @@ export class StockDetailsComponent implements OnInit {
   errorMsg: string = '';
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
-    private stockService: StockService, private authServ: AuthService) { }
+    private stockService: StockService) { }
 
   ngOnInit(): void {
     this.symbol = this.activatedroute.snapshot.paramMap.get('symbol');
@@ -51,7 +51,7 @@ export class StockDetailsComponent implements OnInit {
         this.loading = false;
       });
 
-      this.authServ.getWatchList().toPromise()
+      this.stockService.getWatchList().toPromise()
       .then(w => {
         let s = w.find(x => x.symbol === this.symbol);
         if(s) {
