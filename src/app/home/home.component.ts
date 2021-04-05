@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
   accounts: Account[];
   watchList: Stock[] = [];
   marketNews: News[] = [];
+  filterMarketNews: News[] = [];
+  hasMoreNews: boolean = false;
 
   accountForm: FormGroup;
   errorMsg: string = '';
@@ -58,9 +60,24 @@ export class HomeComponent implements OnInit {
       .subscribe(
         (resp: News[]) => {
           this.marketNews =  resp;
+          if (this.marketNews.length > 0) {
+            this.filterMarketNews = this.marketNews.slice(0, 5);
+            if (this.marketNews.length > 5) {
+              this.hasMoreNews = true;
+            }
+          }
         }, err => {
         }
       );
+  }
+  
+  getMoreNews() {
+    let fl = this.filterMarketNews.length;
+    let max = this.marketNews.length;
+    this.filterMarketNews = this.marketNews.slice(0, fl + 5);
+    if (fl + 5 >= max){
+      this.hasMoreNews = false;
+    }
   }
 
   get getControl() {

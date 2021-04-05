@@ -12,12 +12,11 @@ declare var jQuery: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'I-Invest-Client';
   
   searchText: string = '';
   searchResult: SearchStock[] = [];
-  userAuthenticated: Subject<boolean> | undefined;
 
   @ViewChild('searchInputEle')
   searchInputEle!: ElementRef;
@@ -27,10 +26,6 @@ export class AppComponent implements OnInit {
   
   constructor(private auth: AuthService, private stockService: StockService, 
     private router: Router) { }
-
-  ngOnInit(): void {
-    this.userAuthenticated = this.auth.isLoggedIn$;
-  }
 
   logout() {
     this.auth.logout();

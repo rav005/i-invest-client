@@ -8,13 +8,8 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService {
   private token: string | null;
-  public isLoggedIn$: Subject<boolean> = new Subject();
-
   constructor(private http: HttpClient) {
     this.token = sessionStorage.getItem('token');
-    if (this.token) {
-      this.isLoggedIn$.next(true);
-    }
   }
 
   public isAuthenticated(): boolean {
@@ -36,7 +31,6 @@ export class AuthService {
           if (resp?.token) {
             this.token = resp.token;
             sessionStorage.setItem('token', resp.token);
-            this.isLoggedIn$.next(true);
             return true;
           }
           return false;
@@ -46,7 +40,6 @@ export class AuthService {
 
   public logout() {
     this.token = null;
-    this.isLoggedIn$.next(false);
     localStorage.clear();
     sessionStorage.clear();
     window.location.reload();
