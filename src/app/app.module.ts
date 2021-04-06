@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { GoogleChartsModule } from 'angular-google-charts';
 
 import { HttpRequestInterceptor } from './helpers/http.interceptor';
 import { AuthService } from './services/auth.service';
@@ -32,8 +31,7 @@ import { StockDetailsComponent } from './stock-details/stock-details.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
-    GoogleChartsModule
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },

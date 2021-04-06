@@ -1,7 +1,4 @@
-<div class="container-xl" *ngIf="stockQuote">
-
-
-
+<div class="container-fluid" *ngIf="stockQuote">
     <h2>
         <i class="bi bi-star" *ngIf="!watchlisted" (click)="toggleWatchlist()"></i>
         <i class="bi bi-star-fill" *ngIf="watchlisted" (click)="toggleWatchlist()"></i>
@@ -9,9 +6,15 @@
         <span>({{ symbol }})</span>
     </h2>
     
-    <div class="row">
-        <div class="col-12" id="recommendations_chart" style="width: 50%; height: 300px;"></div>
-        <div class="col-12" id="curve_chart" style="height: 500px;"></div>
+    <div class="row charts">
+        <div class="col-8">
+            <h5>Historical data</h5>
+            <div id="curve_chart" style="height: 400px;" *ngIf="showTrendGraph"></div>
+        </div>
+        <div class="col-4">
+            <h5>Recommendation trends</h5>
+            <div id="recommendations_chart" style="height: 300px;"></div>
+        </div>
     </div>
 
     <div class="row">

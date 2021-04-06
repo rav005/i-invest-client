@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Metric, News, StockQuote, Trend } from '../models/stock';
-import { AuthService } from '../services/auth.service';
 import { StockService } from '../services/stocks.service';
 
 declare let google: any;
@@ -106,31 +105,75 @@ export class StockDetailsComponent implements OnInit {
 
   private getHistoricalData() {
     this.stockService.getHistoricalData(this.symbol!).toPromise()
-    .then(data => this.drawHistGraph(data));
+    .then(data => this.drawHistGraph(data))
+    .catch(err => { console.error('getHistoricalData: ', err)});
   }
 
   private drawHistGraph(chartData: any) {
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(chartData);
-        console.log('line data: ', data);
-        var options = {
-          chart: {
-            title: 'Historical data'
-          }
-        };
+    var lineChartCols: any[] = [];
+    var dataColors: any[] = [
+      { color: '#306EFF', disableColor: '#82CAFF'},
+      { color: '#348017', disableColor: '#99C68E'},
+      { color: '#C68E17', disableColor: '#ECE5B6'},
+      { color: '#F62217', disableColor: '#F75D59'},
+      { color: '#7F38EC', disableColor: '#E0B0FF'},
+      { color: '#E4287C', disableColor: '#F778A1'},
+      { color: '#7E3517', disableColor: '#C5908E'},
+      { color: '#827839', disableColor: '#C8B560'}
+    ];
+    if (chartData[0]) {
+      chartData[0].forEach((x: string) => {
+        lineChartCols.push({
+          name: x,
+          visible: true
+        });
+      });
+    }
+    this.showTrendGraph = true;
+    var data, dataView;
+    function drawChart() {
+      data = google.visualization.arrayToDataTable(chartData, false);
+      dataView = new google.visualization.DataView(data);
 
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-        chart.draw(data, options);
-
-        
+      // Toggle visibility of data series on click of legend.
+      google.visualization.events.addListener(chart, 'click', function (target: any) {
+        if (target.targetID.match(/^legendentry#\d+$/)) {    
+          var index = parseInt(target.targetID.slice(12)) + 1;
+          lineChartCols[index].visible = !lineChartCols[index].visible;
+          drawChart();
+        }
+      });
+      
+      let visibleColumnIndexes = <any>[0];
+      let colors: string[] = [];
+      for (var i = 1; i < lineChartCols.length; i++) {
+        if (lineChartCols[i].visible) {
+          visibleColumnIndexes.push(i);
+          colors.push(dataColors[i-1].color);
+        } else {
+          visibleColumnIndexes.push({
+            calc: () => null,
+            type: 'number',
+            label: lineChartCols[i].name
+          });
+          colors.push(dataColors[i-1].disableColor);
+        }
       }
+      dataView.setColumns(visibleColumnIndexes);
+
+      var options = {
+        colors: colors
+      };
+      chart.draw(dataView, options);
+    }
   }
 
-
+  // https://codepen.io/gapple/details/nluHK
   private drawChart(chartData: any) {
     google.charts.load('current', {'packages': ['bar']});
     google.charts.setOnLoadCallback(drawChart);
@@ -142,7 +185,7 @@ export class StockDetailsComponent implements OnInit {
       const options = {
         isStacked: true,
         vAxis: {format: 'decimal'},
-        hAxis: {format: ''},
+        hAxis: {format: '', title: ''},
         series: {
           0: {color: '#ff6347'},
           1: {color: '#3cb371'},

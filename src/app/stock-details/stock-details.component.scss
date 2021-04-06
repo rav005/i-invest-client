@@ -17,3 +17,19 @@ h2 {
         margin-bottom: 5px;
     }
 }
+
+.charts {
+    margin-bottom: 20px;
+
+    .col-8 {
+        margin-left: -40px;
+
+        h5 {
+            margin-left: 40px;
+        }
+    }
+
+    .col-4 h5 {
+        margin-bottom: 60px;
+    }
+}

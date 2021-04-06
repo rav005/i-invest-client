@@ -86,7 +86,8 @@ export class StockService {
     }
 
     public getCompanyNews(symbol: String): Observable<News[]> {
-        let req = { symbol: symbol };
+        const s = symbol.split('.')[0];
+        let req = { symbol: s };
 
         return this.http.post<News[]>('/stock/companyNews', req)
             .pipe(
@@ -143,7 +144,8 @@ export class StockService {
     }
 
     public getHistoricalData(symbol: string): Observable<any> {
-        let req = { symbol: symbol };
+        const s = symbol.split('.')[0];
+        let req = { symbol: s };
         return this.http.post('/stock/historical', req);
     }
 
