@@ -17,18 +17,42 @@
         </div>
       </div>
       <div class="right">
-        <button class="btn btn-outline-danger right" (click)="logout()">Logout</button>
+        <button class="btn btn-outline-danger right" (click)="logout()"><i class="bi bi-box-arrow-right"></i></button>
         <div class="nav-item dropdown right">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            User
-          </a>
+          <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" 
+            data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear"></i></a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" 
+              data-bs-target="#changePassword" (click)="reset()">Change password</a></li>
           </ul>
         </div>
       </div>
     </div>
 </nav>
 <router-outlet></router-outlet>
+
+<div class="modal fade show" id="changePassword" tabindex="-1" aria-labelledby="password-change" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New password</label>
+              <input type="password" class="form-control" [(ngModel)]="newPassword" id="newPassword" placeholder="new password">
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">New password</label>
+              <input type="password" class="form-control" [(ngModel)]="confirmPassword" id="confirmPassword" placeholder="confirm password">
+            </div>
+              <div class="text-danger">{{ modelErrorMsg }}</div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" (click)="changePassword()">Confirm</button>
+          </div>
+      </div>
+  </div>
+</div>

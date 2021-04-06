@@ -18,6 +18,10 @@ export class AppComponent {
   searchText: string = '';
   searchResult: SearchStock[] = [];
 
+  newPassword: string = '';
+  confirmPassword: string = '';
+  modelErrorMsg: string = '';
+
   @ViewChild('searchInputEle')
   searchInputEle!: ElementRef;
   
@@ -43,6 +47,32 @@ export class AppComponent {
         window.location.reload();
       }
     });
+  }
+
+  reset() {
+    this.modelErrorMsg = '';
+    this.newPassword = this.confirmPassword = '';
+  }
+
+  changePassword() {
+    console.log('change password invoked');
+    if (this.newPassword !== this.confirmPassword) {
+      this.modelErrorMsg = 'Passwords does not match';
+      return;
+    }
+
+    if (this.newPassword.length < 6) {
+      this.modelErrorMsg = 'Passwords must be 6 characters long';
+      return;
+    }
+
+    this.auth.changePassword(this.newPassword).toPromise()
+    .then(resp => { 
+      jQuery("#changePassword").modal("hide");
+    }).catch(err => {
+      this.modelErrorMsg = 'Failed to change password';
+      this.newPassword = this.confirmPassword = '';
+    })
   }
 
   @HostListener('document:mousedown', ['$event'])

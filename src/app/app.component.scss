@@ -1,5 +1,13 @@
 .navbar {
     margin-bottom: 5px;
+
+    .dropdown {
+        line-height: 20px;
+        
+        .bi-gear {
+            font-size: 20px;
+        }
+    }
 }
 
 .searchResult {

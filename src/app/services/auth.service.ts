@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService {
   private token: string | null;
+
   constructor(private http: HttpClient) {
     this.token = sessionStorage.getItem('token');
   }
@@ -36,6 +37,10 @@ export class AuthService {
           return false;
         })
       );
+  }
+
+  public changePassword(newPassword: string): Observable<any> {
+    return this.http.post('/user/passwordchange', { password: newPassword, token: this.token });
   }
 
   public logout() {
