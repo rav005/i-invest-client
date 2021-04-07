@@ -55,7 +55,7 @@
             <h4>Watchlist</h4>
             <div class="card mb-2" *ngFor="let s of watchList">
                 <i class="bi bi-x-circle" (click)="removeWatchlist(s.symbol)"></i>
-                <div class="card-body" (click)="view(s.symbol, s.name)">
+                <div class="card-body" (click)="view(s)">
                     <div class="row">
                         <h5 class="card-title col-6">{{ s.symbol }}</h5>
                         <p class="card-text right col-6" *ngIf="s.data && s.data.c">{{ s.data.c | currency }}</p>

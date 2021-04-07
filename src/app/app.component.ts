@@ -45,8 +45,8 @@ export class AppComponent {
     }
   }
 
-  view(symbol: string, name: string) {
-    this.router.navigate(['stock', symbol, name]).then(r => {
+  view(stock: SearchStock) {
+    this.router.navigate(['stock', stock.symbol, stock.description, stock.currency]).then(r => {
       if (this.router.url.includes('/stock/')) {
         window.location.reload();
       }

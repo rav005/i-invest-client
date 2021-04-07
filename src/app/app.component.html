@@ -10,7 +10,7 @@
         (keyup)="search()">
       <div #searchResultEle class="searchResult col-4" *ngIf="searchResult.length > 0">
         <div class="card stock" *ngFor="let s of searchResult">
-          <div class="card-body stock" (click)="view(s.symbol, s.description)">
+          <div class="card-body stock" (click)="view(s)">
             <h5 class="card-title stock">{{ s.description }}</h5>
             <h6 class="card-subtitle mb-2 text-muted stock">{{ s.symbol }}</h6>
           </div>

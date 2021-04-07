@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Metric, News, SearchStock, Stock, StockQuote } from "../models/stock";
-import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -149,8 +148,8 @@ export class StockService {
         return this.http.post('/stock/historical', req);
     }
 
-    public toggleWatchlist(symbol: string, name: string, add: boolean): Observable<boolean> {
-        let req = { symbol: symbol, stockName: name };
+    public toggleWatchlist(symbol: string, name: string, currency: string, add: boolean): Observable<boolean> {
+        let req = { symbol: symbol, stockName: name, currency: currency };
         let url = '';
         if (add) {
             url = '/stock/addToWatchlist';
@@ -164,6 +163,7 @@ export class StockService {
                     this.reloadWatchList().toPromise();
                 } else {
                     this.watchList = this.watchList.filter(w => w.symbol != symbol);
+                    sessionStorage.setItem('watchlist', JSON.stringify(this.watchList));
                 }
                 return true;
             }));

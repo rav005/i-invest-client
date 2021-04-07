@@ -105,28 +105,38 @@
             </table>
         </div>
         <div class="col-4">
-            <h5>Buy</h5>
-            <form [formGroup]="buyForm" (ngSubmit)="buy()">
-                <!-- <div class="form-floating mb-3">
-                    <input type="text" class="form-control" [ngClass]="{ 'is-invalid': username.invalid && username.touched }" 
-                        [formControl]="username" id="username" placeholder="Username">
-                    <label for="username">Username</label>
+            <h5>Buy {{ symbol }} ({{ currency }})</h5>
+            <form [formGroup]="buyForm" (ngSubmit)="buy()"  *ngIf="accounts.length > 0; else noAccounts">
+                <div class="mb-3">
+                    <label for="account">Account</label>
+                    <select class="form-select" formControlName="account" aria-label="Select account" id="account">
+                        <option *ngFor="let a of accounts" value="a._id">{{ a.name }} - {{ a.balance | currency }} {{ a.currency }}</option>
+                    </select>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" [ngClass]="{ 'is-invalid': password.invalid && password.touched }" 
-                        [formControl]="password" id="password" placeholder="Password">
-                    <label for="password">Password</label>
+                <div class="mb-3">
+                    <label for="buyType">Type</label>
+                    <select class="form-select" formControlName="type" aria-label="Buy type" id="buyType">
+                        <option value="Market buy">Market buy</option>
+                        <option value="Limit buy">Limit buy</option>
+                    </select>
                 </div>
-                <div class="form-floating mb-3" *ngIf="errorMsg.length > 0">
+                <div class="mb-3">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" formControlName="quantity" placeholder="quantity">
+                </div>
+                <div class="mb-3" *ngIf="errorMsg.length > 0">
                     <p class="error">{{ errorMsg }}</p>
                 </div>
-                <div class="form-floating mb-3" *ngIf="successMsg.length > 0">
+                <div class="mb-3" *ngIf="successMsg.length > 0">
                     <p class="success">{{ successMsg }}</p>
-                </div> -->
+                </div>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary" [disabled]="!buyForm.valid">Purchase</button>
                 </div>
             </form>
+            <ng-template #noAccounts>
+                <p>No accounts available</p>
+            </ng-template>
         </div>
     </div>
 

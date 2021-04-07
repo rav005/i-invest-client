@@ -50,7 +50,6 @@ export class HomeComponent implements OnInit {
       .subscribe(resp => {
         this.accounts = resp;
       }, err => {
-        console.log('getAccounts() err: ', err);
         this.accounts = [];
       })
   }
@@ -103,7 +102,7 @@ export class HomeComponent implements OnInit {
   }
 
   removeWatchlist(symbol: string) {
-    this.stockService.toggleWatchlist(symbol, '', false).toPromise()
+    this.stockService.toggleWatchlist(symbol, '', '', false).toPromise()
     .then(x => {
       this.watchList = this.watchList.filter(w => w.symbol != symbol);
     }).catch(e => {});
@@ -113,8 +112,8 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/account/' + account._id]);
   }
 
-  view(symbol: string, name: string) {
-    this.router.navigate(['/stock', symbol, name]);
+  view(stock: Stock) {
+    this.router.navigate(['/stock', stock.symbol, stock.name, stock.currency]);
   }
 
 }

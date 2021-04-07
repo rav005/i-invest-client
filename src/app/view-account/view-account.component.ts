@@ -93,7 +93,7 @@ export class ViewAccountComponent implements OnInit {
         }
       }
 
-      this.accountServ.updateBalance(this.account!._id, amount)
+      this.accountServ.updateBalance(this.account!._id, amount, this.fundsUpdateType!, this.account!.balance)
         .subscribe(resp => {
           this.account!.balance = amount;
           jQuery("#updateFunds").modal("hide");

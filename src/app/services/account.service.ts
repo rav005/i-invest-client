@@ -13,7 +13,7 @@ import { Account } from '../models/account';
       this.accounts = [];
     }
 
-    public get() {
+    public get() : Account[] {
         return this.accounts;
     }
 
@@ -69,8 +69,8 @@ import { Account } from '../models/account';
         );
     }
 
-    public updateBalance(account: string, balance: number) {
-        const req = { accountId: account, newBalance: balance };
+    public updateBalance(account: string, balance: number, type: string, prevBalance: number) {
+        const req = { accountId: account, newBalance: balance, transactionType: type, prevBalance: prevBalance };
         return this.http.post('/account/newBalance', req);
     }
 }

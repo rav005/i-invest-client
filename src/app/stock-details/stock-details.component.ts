@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Account } from '../models/account';
 import { Metric, News, StockQuote, Trend } from '../models/stock';
+import { AccountService } from '../services/account.service';
 import { StockService } from '../services/stocks.service';
 
 declare let google: any;
@@ -17,6 +19,7 @@ export class StockDetailsComponent implements OnInit {
   stockQuote: StockQuote | null = null;
   symbol: string | null = null;
   name: string | null = null;
+  currency: string | null = null;
   
   filterMarketNews: News[] = [];
   marketNews: News[] = [];
@@ -28,12 +31,14 @@ export class StockDetailsComponent implements OnInit {
   watchlisted: boolean = false;
 
   buyForm: FormGroup;
+  accounts: Account[] = [];
 
   loading: boolean = false;
   errorMsg: string = '';
+  successMsg: string = '';
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
-    private stockService: StockService) {
+    private stockService: StockService, private accountServ: AccountService) {
       this.buyForm = new FormGroup({
         type: new FormControl('', [Validators.required]),
         account: new FormControl('', [Validators.required]),
@@ -45,12 +50,19 @@ export class StockDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.symbol = this.activatedroute.snapshot.paramMap.get('symbol');
     this.name = this.activatedroute.snapshot.paramMap.get('name');
+    this.currency = this.activatedroute.snapshot.paramMap.get('currency');
+
     if (this.symbol) {
       this.loading = true;
       this.stockService.getStock(this.symbol)
       .subscribe(resp => {
         this.stockQuote = resp;
         this.loading = false;
+
+        this.accountServ.getAccounts()
+        .subscribe(resp => {
+          this.accounts = resp;
+        }, err => {});
 
         this.getCompanyNews();
         this.getBasicFinancials();
@@ -214,7 +226,7 @@ export class StockDetailsComponent implements OnInit {
   }
 
   toggleWatchlist() {
-    this.stockService.toggleWatchlist(this.symbol!, this.name!, !this.watchlisted)
+    this.stockService.toggleWatchlist(this.symbol!, this.name!, this.currency!, !this.watchlisted)
     .subscribe(resp => {
       this.watchlisted = !this.watchlisted;
     }, err => { });

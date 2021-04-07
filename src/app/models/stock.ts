@@ -9,6 +9,7 @@ export interface StockQuote {
 export interface Stock {
     name: string;
     symbol: string;
+    currency: string;
     data: StockQuote;
 }
 
