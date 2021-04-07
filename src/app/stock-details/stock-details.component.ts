@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Metric, News, StockQuote, Trend } from '../models/stock';
 import { StockService } from '../services/stocks.service';
@@ -26,11 +27,20 @@ export class StockDetailsComponent implements OnInit {
 
   watchlisted: boolean = false;
 
+  buyForm: FormGroup;
+
   loading: boolean = false;
   errorMsg: string = '';
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
-    private stockService: StockService) { }
+    private stockService: StockService) {
+      this.buyForm = new FormGroup({
+        type: new FormControl('', [Validators.required]),
+        account: new FormControl('', [Validators.required]),
+        quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
+        price: new FormControl(0, [Validators.required, Validators.min(0)])
+      });
+  }
 
   ngOnInit(): void {
     this.symbol = this.activatedroute.snapshot.paramMap.get('symbol');
@@ -107,7 +117,7 @@ export class StockDetailsComponent implements OnInit {
   private getHistoricalData() {
     this.stockService.getHistoricalData(this.symbol!).toPromise()
     .then(data => this.drawHistGraph(data))
-    .catch(err => { console.error('getHistoricalData: ', err)});
+    .catch(err => { });
   }
 
   private drawHistGraph(chartData: any) {
@@ -208,6 +218,10 @@ export class StockDetailsComponent implements OnInit {
     .subscribe(resp => {
       this.watchlisted = !this.watchlisted;
     }, err => { });
+  }
+
+  buy() {
+
   }
 
 }

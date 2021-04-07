@@ -132,10 +132,13 @@ export class LoginComponent implements OnInit {
         this.secQuestionAns.markAsTouched();
         return;
       }
-      if (this.enablePasswordReset && (this.password.invalid || this.confirmPassword.invalid) 
-      || this.password.value !== this.confirmPassword.value) {
+      if (this.enablePasswordReset && (this.password.invalid || this.confirmPassword.invalid ||
+        this.password.value.length < 6 || this.password.value !== this.confirmPassword.value)) {
           this.password.markAsTouched();
           this.confirmPassword.markAsTouched();
+          if (this.password.value.length < 6) {
+            this.errorMsg = 'Passwords must be 6 characters long';
+          }
           return;
       }
 
@@ -155,11 +158,10 @@ export class LoginComponent implements OnInit {
             this.successMsg = 'Successfully changed password';
           }
         }, (err: any) => {
-          console.error('password reset: ', err);
-          if (this.resetPasswordToken.length > 0) {
-            this.errorMsg = 'Failed to reset password';
+          if (err.error.message) {
+            this.errorMsg = err.error.message;
           } else {
-            this.errorMsg = 'User not found';
+            this.errorMsg = 'Failed to reset password';
           }
         });
     } else {

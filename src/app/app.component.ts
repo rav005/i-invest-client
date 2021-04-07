@@ -18,6 +18,7 @@ export class AppComponent {
   searchText: string = '';
   searchResult: SearchStock[] = [];
 
+  currentPassword: string = ''; 
   newPassword: string = '';
   confirmPassword: string = '';
   modelErrorMsg: string = '';
@@ -53,13 +54,17 @@ export class AppComponent {
   }
 
   reset() {
-    this.modelErrorMsg = '';
+    this.modelErrorMsg = this.currentPassword = '';
     this.newPassword = this.confirmPassword = '';
     this.secQuestion = this.secQuestionAns = '';
   }
 
   changePassword() {
-    console.log('change password invoked');
+    if (!this.currentPassword || this.currentPassword.trim().length == 0) {
+      this.modelErrorMsg = 'Current password required';
+      return;
+    }
+
     if (this.newPassword !== this.confirmPassword) {
       this.modelErrorMsg = 'Passwords does not match';
       return;
@@ -70,17 +75,26 @@ export class AppComponent {
       return;
     }
 
-    this.auth.changePassword(this.newPassword).toPromise()
+    this.auth.changePassword(this.currentPassword, this.newPassword).toPromise()
     .then(resp => { 
       jQuery("#changePassword").modal("hide");
       this.reset();
     }).catch(err => {
-      this.modelErrorMsg = 'Failed to change password';
-      this.newPassword = this.confirmPassword = '';
+      if (err.error.message?.includes("incorrect password")) {
+        this.modelErrorMsg = 'Incorrect current password';
+      } else {
+        this.modelErrorMsg = 'Failed to change password';
+      }
+      this.newPassword = this.confirmPassword = this.currentPassword  = '';
     });
   }
 
   updateSecurityQuestion() {
+    if (!this.currentPassword || this.currentPassword.trim().length == 0) {
+      this.modelErrorMsg = 'Current password required';
+      return;
+    }
+
     if (!this.secQuestion || this.secQuestion.trim().length == 0) {
       this.modelErrorMsg = 'Security question required';
       return;
@@ -91,13 +105,17 @@ export class AppComponent {
       return;
     }
 
-    this.auth.updateSecurityQuestion(this.secQuestion, this.secQuestionAns).toPromise()
+    this.auth.updateSecurityQuestion(this.currentPassword, this.secQuestion, this.secQuestionAns).toPromise()
     .then(resp => { 
       jQuery("#updateSecQues").modal("hide");
       this.reset();
     }).catch(err => {
-      this.modelErrorMsg = 'Failed to update security question';
-      this.secQuestion = this.secQuestionAns = '';
+      if (err.error.message?.includes("incorrect password")) {
+        this.modelErrorMsg = 'Incorrect current password';
+      } else {
+        this.modelErrorMsg = 'Failed to update security question';
+      }
+      this.secQuestion = this.secQuestionAns = this.currentPassword = '';
     });
   }
 

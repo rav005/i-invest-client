@@ -105,7 +105,28 @@
             </table>
         </div>
         <div class="col-4">
-            <h5>Buy/Sell</h5>
+            <h5>Buy</h5>
+            <form [formGroup]="buyForm" (ngSubmit)="buy()">
+                <!-- <div class="form-floating mb-3">
+                    <input type="text" class="form-control" [ngClass]="{ 'is-invalid': username.invalid && username.touched }" 
+                        [formControl]="username" id="username" placeholder="Username">
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" [ngClass]="{ 'is-invalid': password.invalid && password.touched }" 
+                        [formControl]="password" id="password" placeholder="Password">
+                    <label for="password">Password</label>
+                </div>
+                <div class="form-floating mb-3" *ngIf="errorMsg.length > 0">
+                    <p class="error">{{ errorMsg }}</p>
+                </div>
+                <div class="form-floating mb-3" *ngIf="successMsg.length > 0">
+                    <p class="success">{{ successMsg }}</p>
+                </div> -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary" [disabled]="!buyForm.valid">Purchase</button>
+                </div>
+            </form>
         </div>
     </div>
 

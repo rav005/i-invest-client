@@ -39,8 +39,12 @@ export class AuthService {
       );
   }
 
-  public changePassword(newPassword: string): Observable<any> {
-    return this.http.post('/user/passwordchange', { password: newPassword, token: this.token });
+  public changePassword(currPassword: string, newPassword: string): Observable<any> {
+    return this.http.post('/user/passwordchange', 
+    { newPassword: newPassword,
+      currentPassword: currPassword,
+      token: this.token 
+    });
   }
 
   public logout() {
@@ -76,20 +80,15 @@ export class AuthService {
     let req = {
       username: username,
       answer: securityAnswer,
-      password: password,
-      token: token
+      newPassword: password,
+      token: token,
+      type: 'reset'
     };
     if (token.length > 0) {
-      console.log('token: ', token);
       return this.http.post('/user/passwordchange', req)
         .pipe(
           map((resp: any) => {
-            if (resp.token) {
-              resp.passwordChanged = true;
-            } else {
-              resp.passwordChanged = false;
-            }
-            console.log('adding authentication: ', resp);
+            resp.passwordChanged = true;
             return resp;
           })
         );
@@ -100,8 +99,12 @@ export class AuthService {
     }
   }
 
-  public updateSecurityQuestion(securityQuestion: string, securityQuestionAns: string) {
+  public updateSecurityQuestion(currPassword: string, securityQuestion: string, securityQuestionAns: string) {
     return this.http.post('/user/securityQuestionAnswerChange', 
-      { question: securityQuestion, answer: securityQuestionAns, token: this.token });
+      { question: securityQuestion, 
+        answer: securityQuestionAns, 
+        currentPassword: currPassword,
+        token: this.token 
+      });
   }
 }
