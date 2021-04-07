@@ -7,9 +7,9 @@
     </h2>
     
     <div class="row charts">
-        <div class="col-8">
+        <div class="col-8" *ngIf="showTrendGraph">
             <h5>Historical data</h5>
-            <div id="curve_chart" style="height: 400px;" *ngIf="showTrendGraph"></div>
+            <div id="curve_chart" style="height: 400px;"></div>
         </div>
         <div class="col-4">
             <h5>Recommendation trends</h5>

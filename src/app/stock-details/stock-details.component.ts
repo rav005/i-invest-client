@@ -21,6 +21,7 @@ export class StockDetailsComponent implements OnInit {
   marketNews: News[] = [];
   hasMoreNews: boolean = false;
   metric: Metric | null = null;
+  showRecommendationGraph: boolean = false;
   showTrendGraph: boolean = false;
 
   watchlisted: boolean = false;
@@ -99,7 +100,7 @@ export class StockDetailsComponent implements OnInit {
   private getRecommendations() {
     this.stockService.getRecommendations(this.symbol!)
     .subscribe((resp: Trend[]) => {
-      this.drawChart(resp);
+      this.drawRecommendationChart(resp);
     }, err => {})
   }
 
@@ -174,9 +175,10 @@ export class StockDetailsComponent implements OnInit {
   }
 
   // https://codepen.io/gapple/details/nluHK
-  private drawChart(chartData: any) {
+  private drawRecommendationChart(chartData: any) {
     google.charts.load('current', {'packages': ['bar']});
     google.charts.setOnLoadCallback(drawChart);
+    this.showRecommendationGraph = true;
 
     function drawChart() {
       // https://developers.google.com/chart/interactive/docs/gallery/barchart#stacked-bar-charts
