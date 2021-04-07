@@ -94,7 +94,11 @@ export class LoginComponent implements OnInit {
     this.errorMsg = '';
     if (this.username.valid && this.password.valid && this.secQuestion.valid && this.secQuestionAns.valid) {
       if (this.username.value.length < 5) {
-        this.errorMsg = 'Username requires minimum of 5 characters';
+        this.errorMsg = 'Username must be minimum of 5 characters long';
+        return;
+      }
+      if (this.password.value.length < 6) {
+        this.errorMsg = 'Password must be minimum of 6 characters long';
         return;
       }
       this.auth.signup(this.username.value, this.password.value, this.secQuestion.value, this.secQuestionAns.value)

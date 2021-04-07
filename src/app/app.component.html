@@ -25,6 +25,8 @@
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
           <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePassword"
               (click)="reset()">Change password</a></li>
+          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateSecQues"
+              (click)="reset()">Security question</a></li>
         </ul>
       </div>
     </div>
@@ -32,6 +34,7 @@
 </nav>
 <router-outlet></router-outlet>
 
+<!-- Modal -->
 <div class="modal fade show" id="changePassword" tabindex="-1" aria-labelledby="password-change" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -55,6 +58,34 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="changePassword()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade show" id="updateSecQues" tabindex="-1" aria-labelledby="security-question-change" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update security question</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="question" class="form-label">Question</label>
+          <input type="text" class="form-control" [(ngModel)]="secQuestion" id="question"
+            placeholder="security question">
+        </div>
+        <div class="mb-3">
+          <label for="answer" class="form-label">Answer</label>
+          <input type="text" class="form-control" [(ngModel)]="secQuestionAns" id="answer"
+            placeholder="security question answer">
+        </div>
+        <div class="text-danger">{{ modelErrorMsg }}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="updateSecurityQuestion()">Update</button>
       </div>
     </div>
   </div>

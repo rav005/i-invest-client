@@ -99,4 +99,9 @@ export class AuthService {
       return this.http.post('/user/passwordreset', req);
     }
   }
+
+  public updateSecurityQuestion(securityQuestion: string, securityQuestionAns: string) {
+    return this.http.post('/user/securityQuestionAnswerChange', 
+      { question: securityQuestion, answer: securityQuestionAns, token: this.token });
+  }
 }

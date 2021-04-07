@@ -22,6 +22,9 @@ export class AppComponent {
   confirmPassword: string = '';
   modelErrorMsg: string = '';
 
+  secQuestion: string = '';
+  secQuestionAns: string = '';
+
   @ViewChild('searchInputEle')
   searchInputEle!: ElementRef;
   
@@ -52,6 +55,7 @@ export class AppComponent {
   reset() {
     this.modelErrorMsg = '';
     this.newPassword = this.confirmPassword = '';
+    this.secQuestion = this.secQuestionAns = '';
   }
 
   changePassword() {
@@ -69,10 +73,32 @@ export class AppComponent {
     this.auth.changePassword(this.newPassword).toPromise()
     .then(resp => { 
       jQuery("#changePassword").modal("hide");
+      this.reset();
     }).catch(err => {
       this.modelErrorMsg = 'Failed to change password';
       this.newPassword = this.confirmPassword = '';
-    })
+    });
+  }
+
+  updateSecurityQuestion() {
+    if (!this.secQuestion || this.secQuestion.trim().length == 0) {
+      this.modelErrorMsg = 'Security question required';
+      return;
+    }
+
+    if (!this.secQuestionAns || this.secQuestionAns.trim().length == 0) {
+      this.modelErrorMsg = 'Security question answer required';
+      return;
+    }
+
+    this.auth.updateSecurityQuestion(this.secQuestion, this.secQuestionAns).toPromise()
+    .then(resp => { 
+      jQuery("#updateSecQues").modal("hide");
+      this.reset();
+    }).catch(err => {
+      this.modelErrorMsg = 'Failed to update security question';
+      this.secQuestion = this.secQuestionAns = '';
+    });
   }
 
   @HostListener('document:mousedown', ['$event'])
