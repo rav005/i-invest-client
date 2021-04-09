@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Account } from '../models/account';
+import { Account, Exchange } from '../models/account';
 import { Metric, News, StockQuote, Trend } from '../models/stock';
 import { AccountService } from '../services/account.service';
 import { StockService } from '../services/stocks.service';
@@ -26,9 +26,11 @@ export class StockDetailsComponent implements OnInit {
   hasMoreNews: boolean = false;
   metric: Metric | null = null;
   showRecommendationGraph: boolean = false;
-  showTrendGraph: boolean = false;
+  showTrendGraph: boolean = true;
 
   watchlisted: boolean = false;
+
+  private exchange: Exchange | null = null; 
 
   buyForm: FormGroup;
   accounts: Account[] = [];
@@ -62,8 +64,13 @@ export class StockDetailsComponent implements OnInit {
         this.accountServ.getAccounts()
         .subscribe(resp => {
           this.accounts = resp;
+          this.buyForm.patchValue({
+            account: this.accounts[0]._id,
+            type: "Market buy"
+          });
         }, err => {});
 
+        this.getCurrencyRates();
         this.getCompanyNews();
         this.getBasicFinancials();
         this.getRecommendations();
@@ -87,6 +94,49 @@ export class StockDetailsComponent implements OnInit {
     }
   }
 
+  private getCurrencyRates() {
+    this.stockService.getCurrenyRates()
+    .subscribe(
+      resp => {
+        if (resp) {
+          this.exchange = resp;
+        }
+      }, err => {}
+    );
+  }
+
+  public getPrice() {
+    let accId = this.buyForm.value.account;
+    let account = this.accounts.find(x => x._id == accId);
+    let type = this.buyForm.value.type;
+    let limitBuy = this.buyForm.value.price;
+    let quantity = this.buyForm.value.quantity;
+
+    let price = this.stockQuote!.c;
+
+    if (type === 'Limit buy') {
+      price = limitBuy;
+    }
+
+    if (!this.stockQuote || !account) {
+      return 0;
+    }
+
+    if (!this.exchange) {
+      return quantity * price; 
+    }
+
+    let exchangeRate = 1;
+    if (this.currency == 'USD' && account!.currency != 'USD') {
+      exchangeRate = this.exchange!.USD_CAD;
+    } else if (this.currency == 'CAD' && account!.currency != 'CAD') {
+      exchangeRate = this.exchange!.CAD_USD;
+    }
+
+    let totalPrice = quantity * price;
+    return totalPrice * exchangeRate;
+  }
+
   private getCompanyNews() {
     this.stockService.getCompanyNews(this.symbol!)
       .subscribe(
@@ -107,7 +157,7 @@ export class StockDetailsComponent implements OnInit {
     let fl = this.filterMarketNews.length;
     let max = this.marketNews.length;
     this.filterMarketNews = this.marketNews.slice(0, fl + 5);
-    if (fl + 5 >= max){
+    if (fl + 5 >= max) {
       this.hasMoreNews = false;
     }
   }
@@ -128,8 +178,13 @@ export class StockDetailsComponent implements OnInit {
 
   private getHistoricalData() {
     this.stockService.getHistoricalData(this.symbol!).toPromise()
-    .then(data => this.drawHistGraph(data))
-    .catch(err => { });
+    .then(data => {
+      if (data.length == 0) {
+        this.showTrendGraph = false;
+      }
+      this.drawHistGraph(data)
+    })
+    .catch(err => { this.showTrendGraph = false; });
   }
 
   private drawHistGraph(chartData: any) {
@@ -155,7 +210,6 @@ export class StockDetailsComponent implements OnInit {
         });
       });
     }
-    this.showTrendGraph = true;
     var data, dataView;
     function drawChart() {
       data = google.visualization.arrayToDataTable(chartData, false);

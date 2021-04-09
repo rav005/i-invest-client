@@ -5,3 +5,8 @@ export interface Account {
     balance: number;
     currency: string;
 }
+
+export interface Exchange {
+    USD_CAD: number;
+    CAD_USD: number;
+}

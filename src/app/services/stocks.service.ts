@@ -117,6 +117,10 @@ export class StockService {
             );
     }
 
+    public getCurrenyRates(): Observable<any>  {
+        return this.http.get<any>('/main/forex');
+    }
+
     public getBasicFinancials(symbol: String): Observable<Metric> {
         let req = { symbol: symbol };
         return this.http.post<Metric>('/stock/basicFinancials', req)
