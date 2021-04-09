@@ -121,6 +121,27 @@ export class StockService {
         return this.http.get<any>('/main/forex');
     }
 
+    public placeOrder(name: string, symbol: string, currency: string, quantity: number, price: number, 
+        type: string, accountId: string): Observable<boolean> {
+        let complete = true;
+        if (type === 'Limit buy') {
+            complete = false;
+        }
+        const req = {
+            name: name,
+            symbol: symbol,
+            currency: currency,
+            quantity: quantity,
+            buyPrice: price,
+            accountId: accountId,
+            type: type,
+            completed: complete
+        }
+
+        return this.http.post<any>('/stock/buyStock', req);
+    
+    }
+
     public getBasicFinancials(symbol: String): Observable<Metric> {
         let req = { symbol: symbol };
         return this.http.post<Metric>('/stock/basicFinancials', req)

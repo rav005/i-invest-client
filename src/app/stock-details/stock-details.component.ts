@@ -33,11 +33,12 @@ export class StockDetailsComponent implements OnInit {
   private exchange: Exchange | null = null; 
 
   buyForm: FormGroup;
+  formErrorMsg: string = '';
+  successMsg: string = '';
   accounts: Account[] = [];
 
   loading: boolean = false;
-  errorMsg: string = '';
-  successMsg: string = '';
+  pageErrorMsg: string = '';
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
     private stockService: StockService, private accountServ: AccountService) {
@@ -45,7 +46,8 @@ export class StockDetailsComponent implements OnInit {
         type: new FormControl('', [Validators.required]),
         account: new FormControl('', [Validators.required]),
         quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
-        price: new FormControl(0, [Validators.required, Validators.min(0)])
+        price: new FormControl(0, [Validators.required, Validators.min(0)]),
+        total: new FormControl(0)
       });
   }
 
@@ -68,6 +70,7 @@ export class StockDetailsComponent implements OnInit {
             account: this.accounts[0]._id,
             type: "Market buy"
           });
+          this.updateForm();
         }, err => {});
 
         this.getCurrencyRates();
@@ -76,7 +79,7 @@ export class StockDetailsComponent implements OnInit {
         this.getRecommendations();
         this.getHistoricalData();
       }, err => {
-        this.errorMsg = 'Failed to fetch stock details';
+        this.pageErrorMsg = 'Failed to fetch stock details';
         this.loading = false;
       });
 
@@ -105,7 +108,7 @@ export class StockDetailsComponent implements OnInit {
     );
   }
 
-  public getPrice() {
+  public updateForm() {
     let accId = this.buyForm.value.account;
     let account = this.accounts.find(x => x._id == accId);
     let type = this.buyForm.value.type;
@@ -119,11 +122,15 @@ export class StockDetailsComponent implements OnInit {
     }
 
     if (!this.stockQuote || !account) {
-      return 0;
+      this.buyForm.patchValue({
+        total: 0
+      });
     }
 
-    if (!this.exchange) {
-      return quantity * price; 
+    if (!this.exchange) { 
+      this.buyForm.patchValue({
+        total: quantity * price
+      });
     }
 
     let exchangeRate = 1;
@@ -133,8 +140,63 @@ export class StockDetailsComponent implements OnInit {
       exchangeRate = this.exchange!.CAD_USD;
     }
 
-    let totalPrice = quantity * price;
-    return totalPrice * exchangeRate;
+    let totalPrice = quantity * (price * exchangeRate);
+    if (totalPrice > account!.balance) {
+      this.formErrorMsg = 'Insufficient funds';
+    } else {
+      this.formErrorMsg = '';
+    }
+
+    this.buyForm.patchValue({
+      total: totalPrice
+    });
+  }
+
+  buy() {
+    let accId = this.buyForm.value.account;
+    let type = this.buyForm.value.type;
+    let limitBuy = this.buyForm.value.price;
+    let quantity = this.buyForm.value.quantity;
+
+    let price = this.stockQuote!.c;
+
+    if (type === 'Limit buy') {
+      price = limitBuy;
+    }
+
+    this.stockService.placeOrder(this.name!, this.symbol!, this.currency!, quantity, price, type, accId)
+    .subscribe(
+      (resp: any) => {
+        if (resp.success) {
+          this.successMsg = resp.message
+          this.accounts = this.accounts.map(x => {
+            if (x._id == accId) {
+              x.balance -= (quantity * price);
+            }
+            return x;
+          });
+        } else {
+          this.formErrorMsg = resp.message;
+        }
+
+        this.buyForm.patchValue({
+          quantity: 1,
+          price: 0
+        });
+        this.updateForm();
+      }, err => {
+        if (err.error.message) {
+          this.formErrorMsg = err.error.message;
+        } else {
+          this.formErrorMsg = 'Failed to order stock';
+        }
+        this.buyForm.patchValue({
+          quantity: 1,
+          price: 0
+        });
+        this.updateForm();
+      }
+    );
   }
 
   private getCompanyNews() {
@@ -284,10 +346,6 @@ export class StockDetailsComponent implements OnInit {
     .subscribe(resp => {
       this.watchlisted = !this.watchlisted;
     }, err => { });
-  }
-
-  buy() {
-
   }
 
 }
