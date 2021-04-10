@@ -4,6 +4,7 @@ import { AccountService } from '../services/account.service';
 import { Account, Portfolio, Transaction } from '../models/account';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PurchaseStock } from '../models/stock';
+import { StockService } from '../services/stocks.service';
 
 declare var jQuery: any;
 
@@ -28,7 +29,7 @@ export class ViewAccountComponent implements OnInit {
   transactions: Transaction[] = [];
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
-    private accountServ: AccountService) { 
+    private accountServ: AccountService, private stockService: StockService) { 
 
       this.updateFundsForm = new FormGroup({
         balance: new FormControl('', [Validators.required, Validators.min(1)])
@@ -44,8 +45,8 @@ export class ViewAccountComponent implements OnInit {
 
           this.getActivity(id);
         }, err => {
-          if (err.message) {
-            this.errorMsg = err.message;
+          if (err?.error?.message) {
+            this.errorMsg = err.error.message;
           } else {
             this.errorMsg = 'Failed to load account';
           }
@@ -131,7 +132,21 @@ export class ViewAccountComponent implements OnInit {
     }
 
     if (action === 'cancel') {
-        
+        this.stockService.cancelOrder(stock.accountId, stock.id)
+        .subscribe(
+          resp => {
+            if (resp) {
+              jQuery("#cancelPurchase").modal("hide");
+            } else {
+              this.errorMsg = 'Failed to cancel order';
+            }
+          }, err => {
+            if (err?.error?.message) {
+              this.errorMsg = err.error.message;
+            } else {
+              this.errorMsg = 'Failed to cancel order';
+            }
+          });
     }
   }
 

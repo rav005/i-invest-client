@@ -22,7 +22,8 @@ export interface PurchaseStock {
     completed: boolean,
     currentPrice: number,
     quantity: number
-    type: string
+    type: string,
+    id: string
 }
 
 export interface SearchStock {

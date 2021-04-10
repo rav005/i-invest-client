@@ -193,8 +193,13 @@ export class StockService {
         return this.http.post<any>('/stock/buyStock', req);
     }
 
-    public cancelOrder() {
-
+    public cancelOrder(accId: string, transactionId: string) {
+        return this.http.post<boolean>('/stock/cancelOrder', { accountId: accId, stockId: transactionId })
+        .pipe(
+            map((resp: any) => {
+                return resp.success;
+            })
+        );
     }
 
 }
