@@ -36,6 +36,10 @@ export class StockDetailsComponent implements OnInit {
   formErrorMsg: string = '';
   successMsg: string = '';
   accounts: Account[] = [];
+  
+  exchangeRate: number = 1;
+  accountCurrency: string = '';
+  exchangeCurrency: string = '';
 
   loading: boolean = false;
   pageErrorMsg: string = '';
@@ -103,6 +107,7 @@ export class StockDetailsComponent implements OnInit {
       resp => {
         if (resp) {
           this.exchange = resp;
+          this.updateForm();
         }
       }, err => {}
     );
@@ -125,19 +130,29 @@ export class StockDetailsComponent implements OnInit {
       this.buyForm.patchValue({
         total: 0
       });
+      return;
     }
+
+    this.accountCurrency = account!.currency;
 
     if (!this.exchange) { 
       this.buyForm.patchValue({
         total: quantity * price
       });
+      return;
     }
 
     let exchangeRate = 1;
     if (this.currency == 'USD' && account?.currency != 'USD') {
       exchangeRate = this.exchange!.USD_CAD;
+      this.exchangeRate = exchangeRate;
+      this.exchangeCurrency = 'USD';
     } else if (this.currency == 'CAD' && account?.currency != 'CAD') {
       exchangeRate = this.exchange!.CAD_USD;
+      this.exchangeRate = exchangeRate;
+      this.exchangeCurrency = 'CAD';
+    } else {
+      this.exchangeRate = exchangeRate;
     }
 
     let totalPrice = quantity * (price * exchangeRate);

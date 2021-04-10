@@ -39,14 +39,24 @@ export class StockService {
     }
 
     public search(searchText: string) {
-        let tickers: SearchStock[] = [];
-        let description: SearchStock[] = [];
         let regex = new RegExp(searchText, 'i');
 
-        tickers = this.data.filter(x => x.symbol.match(regex));
-        description = this.data.filter(x => x.description.match(regex));
+        let tickerResults: SearchStock[] = [];
+        let descResults: SearchStock[] = [];
+        
+        for(let x of this.data) {
+            if (x.symbol.match(regex)) {
+                tickerResults.push(x);
+            } else if (x.description.match(regex)) {
+                descResults.push(x);
+            }
 
-        return tickers.concat(description);
+            if ((tickerResults.length + descResults.length) > 15) {
+                break;
+            }
+        }
+
+        return tickerResults.concat(descResults);
     }
 
     private reloadWatchList(): Observable<Stock[]> {

@@ -40,8 +40,10 @@ export class AppComponent {
   }
 
   search() {
-    if (this.searchText.length > 2) {
+    if (this.searchText.trim().length > 0) {
       this.searchResult = this.stockService.search(this.searchText);
+    } else {
+      this.searchResult = [];
     }
   }
 
