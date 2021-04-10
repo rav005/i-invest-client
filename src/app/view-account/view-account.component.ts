@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../services/account.service';
-import { Account, Portfolio } from '../models/account';
+import { Account, Portfolio, Transaction } from '../models/account';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PurchaseStock } from '../models/stock';
 
@@ -21,8 +21,11 @@ export class ViewAccountComponent implements OnInit {
   modelErrorMsg: string | null = null;
 
   fundsUpdateType: string = '';
-
   updateFundsForm: FormGroup;
+
+  toggleActivitySection: boolean = false;
+  showActivityBtn: boolean = true;
+  transactions: Transaction[] = [];
 
   constructor(private activatedroute: ActivatedRoute, private router: Router, 
     private accountServ: AccountService) { 
@@ -38,6 +41,8 @@ export class ViewAccountComponent implements OnInit {
       this.accountServ.getAccount(id)
         .subscribe((resp: Portfolio) => {
           this.portfolio = resp;
+
+          this.getActivity(id);
         }, err => {
           if (err.message) {
             this.errorMsg = err.message;
@@ -48,6 +53,17 @@ export class ViewAccountComponent implements OnInit {
     } else {
       this.router.navigate(['']);
     }
+  }
+
+  private getActivity(accountId: string) {
+    this.accountServ.getActivity(accountId)
+    .subscribe(
+      resp => {
+        this.transactions = resp;
+      }, err => { 
+        this.showActivityBtn = false;
+      }
+    )
   }
 
   deleteAccount() {
@@ -101,6 +117,10 @@ export class ViewAccountComponent implements OnInit {
           this.modelErrorMsg = `Failed to ${this.fundsUpdateType}`;
         });
     }
+  }
+
+  toggleActivity() {
+    this.toggleActivitySection = !this.toggleActivitySection;
   }
 
   cancel(stock: PurchaseStock, action: string) {

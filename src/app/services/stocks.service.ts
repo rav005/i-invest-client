@@ -184,7 +184,7 @@ export class StockService {
             symbol: symbol,
             currency: currency,
             quantity: quantity,
-            buyPrice: price,
+            price: price,
             accountId: accountId,
             type: type,
             completed: complete
@@ -194,7 +194,7 @@ export class StockService {
     }
 
     public cancelOrder() {
-        
+
     }
 
 }

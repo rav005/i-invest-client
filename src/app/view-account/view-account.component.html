@@ -1,67 +1,88 @@
 <div class="container-xl" *ngIf="portfolio">
     <div class="row">
-        <div class="card col-4 mb-2">
-            <div class="card-body">
-                <p class="card-subtitle text-muted">&nbsp;</p>
-                <h5 class="card-title text-center">{{ portfolio.account.name }}</h5>
-            </div>
-        </div>
-        <div class="card col-3 mb-2">
-            <div class="card-body">
-                <p class="card-subtitle text-muted">Available balance</p>
-                <h5 class="card-title text-center">{{ portfolio.account.balance | currency }}</h5>
-            </div>
-        </div>
-        <div class="card col-2 mb-2">
-            <div class="card-body">
-                <p class="card-subtitle text-muted">&nbsp;</p>
-                <h5 class="card-title text-center">{{ portfolio.account.currency }}</h5>
-            </div>
+        <div class="col-10 mb-2">
+            <h1 class="card-title">{{ portfolio.account.name }}</h1>
+            <h5 class="card-title">Available balance: {{ portfolio.account.balance | currency }} {{ portfolio.account.currency }}</h5>
         </div>
         <div class="col-2 mb-2 last">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#updateFunds" (click)="updateFundsType('Deposit')">Deposit</button><br />
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            <button type="button" class="btn btn-success" data-bs-toggle="modal"
                 data-bs-target="#updateFunds" (click)="updateFundsType('Withdraw')">Withdraw</button><br />
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                 data-bs-target="#deleteAccount">Delete</button>
         </div>
     </div>
 
-    <div class="row">
-        <h4>Portfolio</h4>
+    <div class="row" *ngIf="!toggleActivitySection">
+        <h4>Portfolio &nbsp; 
+            <button type="button" class="btn btn-light" (click)="toggleActivity()" *ngIf="showActivityBtn">View activity</button>
+        </h4>
         <div *ngIf="portfolio.stocks.length > 0; else noStocks">
-            <div class="card col-8 mb-2" *ngFor="let s of portfolio.stocks">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-7">
-                            <h5 class="card-title">{{ s.symbol }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
-                        </div>
-                        <div class="col-5">
-                            <p class="card-title col-12 right">{{ s.buyPrice | currency }} X {{ s.quantity }} = 
-                                <strong>{{ (s.buyPrice * s.quantity) | currency }}</strong></p>
-                            <div class="col-12" *ngIf="!s.completed; else sellOption">
-                                <div class="right">
-                                    <span class="text-muted">Pending completion</span>&nbsp;
-                                    <button type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
-                                </div>
-                            </div>
-                            <ng-template class="col-12" #sellOption>
-                                <button type="button" class="btn btn-danger right" (click)="sell()">Sell</button>
-                            </ng-template>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <table class="table table-hover col-12">
+                <thead>
+                  <tr>
+                    <th scope="col">Symbol<br/>Name</th>
+                    <th scope="col" class="text-right">Quantity</th>
+                    <th scope="col" class="text-right">Purchase price</th>
+                    <th scope="col" class="text-right">Current price</th>
+                    <th scope="col" class="text-right">% change</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of portfolio.stocks">
+                    <td scope="row">{{ s.symbol }}<br>{{ s.name }}</td>
+                    <td class="text-right">{{ s.quantity }}</td>
+                    <td class="text-right">{{ s.price | currency }}</td>
+                    <td class="text-right">{{ s.currentPrice | currency }}</td>
+                    <td class="text-right">{{ ((s.currentPrice - s.price)/s.price) | percent:'0.2' }}</td>
+                    <td class="text-right">
+                        <button *ngIf="!s.completed" type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
+                        <button *ngIf="s.completed" type="button" class="btn btn-warning" (click)="sell()">Sell</button>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
         </div>
         <ng-template #noStocks>
             <p>You don't have any investments</p>
         </ng-template>
     </div>
+
+    <div class="row" *ngIf="toggleActivitySection">
+        <h4>Activity &nbsp; 
+            <button type="button" class="btn btn-light" (click)="toggleActivity()">View portfolio</button>
+        </h4>
+        <div *ngIf="transactions.length > 0; else noActivities">
+            <table class="table table-hover col-12">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Symbol<br/>Name</th>
+                    <th scope="col" class="text-right">Type</th>
+                    <th scope="col" class="text-right">Quantity</th>
+                    <th scope="col" class="text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of transactions">
+                    <td>{{ s.transactionDate | date }}</td>
+                    <td>{{ s.stockSymbol }}<br>{{ s.name }}</td>
+                    <td class="text-right">{{ s.type }}</td>
+                    <td class="text-right">{{ s.quantity }}</td>
+                    <td class="text-right">{{ s.amount | currency }}</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noActivities>
+            <p>No activies present</p>
+        </ng-template>
+    </div>
 </div>
 
-<div class="container-xl" *ngIf="!portfolio!.account && errorMsg">
+<div class="container-xl" *ngIf="!portfolio?.account && errorMsg">
     <p class="error">{{ errorMsg }}</p>
 </div>
 

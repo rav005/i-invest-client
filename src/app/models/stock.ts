@@ -18,8 +18,9 @@ export interface PurchaseStock {
     symbol: string;
     currency: string;
     accountId: string,
-    buyPrice: number,
+    price: number,
     completed: boolean,
+    currentPrice: number,
     quantity: number
     type: string
 }

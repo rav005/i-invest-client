@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Account, Portfolio } from '../models/account';
+import { Account, Portfolio, Transaction } from '../models/account';
 
 @Injectable({
     providedIn: 'root'
@@ -63,5 +63,19 @@ import { Account, Portfolio } from '../models/account';
     public updateBalance(account: string, balance: number, type: string, prevBalance: number) {
         const req = { accountId: account, newBalance: balance, transactionType: type, prevBalance: prevBalance };
         return this.http.post('/account/newBalance', req);
+    }
+
+    public getActivity(id: string): Observable<Transaction[]> {
+        const req = { accountId: id };
+
+        return this.http.post<Transaction[]>('/account/getAllTransactions', req)
+        .pipe(
+            map((resp: any) => {
+                if  (resp.transactions) {
+                    return resp.transactions;
+                }
+                throw resp;
+            })
+        );
     }
 }
