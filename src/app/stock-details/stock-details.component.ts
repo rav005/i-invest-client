@@ -134,9 +134,9 @@ export class StockDetailsComponent implements OnInit {
     }
 
     let exchangeRate = 1;
-    if (this.currency == 'USD' && account!.currency != 'USD') {
+    if (this.currency == 'USD' && account?.currency != 'USD') {
       exchangeRate = this.exchange!.USD_CAD;
-    } else if (this.currency == 'CAD' && account!.currency != 'CAD') {
+    } else if (this.currency == 'CAD' && account?.currency != 'CAD') {
       exchangeRate = this.exchange!.CAD_USD;
     }
 

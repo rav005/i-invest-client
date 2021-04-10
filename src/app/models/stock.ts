@@ -13,6 +13,17 @@ export interface Stock {
     data: StockQuote;
 }
 
+export interface PurchaseStock {
+    name: string;
+    symbol: string;
+    currency: string;
+    accountId: string,
+    buyPrice: number,
+    completed: boolean,
+    quantity: number
+    type: string
+}
+
 export interface SearchStock {
     currency: string;
     description: string;

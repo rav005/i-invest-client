@@ -1,21 +1,21 @@
-<div class="container-xl" *ngIf="account">
+<div class="container-xl" *ngIf="portfolio">
     <div class="row">
         <div class="card col-4 mb-2">
             <div class="card-body">
                 <p class="card-subtitle text-muted">&nbsp;</p>
-                <h5 class="card-title text-center">{{ account.name }}</h5>
+                <h5 class="card-title text-center">{{ portfolio.account.name }}</h5>
             </div>
         </div>
         <div class="card col-3 mb-2">
             <div class="card-body">
                 <p class="card-subtitle text-muted">Available balance</p>
-                <h5 class="card-title text-center">{{ account.balance | currency }}</h5>
+                <h5 class="card-title text-center">{{ portfolio.account.balance | currency }}</h5>
             </div>
         </div>
         <div class="card col-2 mb-2">
             <div class="card-body">
                 <p class="card-subtitle text-muted">&nbsp;</p>
-                <h5 class="card-title text-center">{{ account.currency }}</h5>
+                <h5 class="card-title text-center">{{ portfolio.account.currency }}</h5>
             </div>
         </div>
         <div class="col-2 mb-2 last">
@@ -30,24 +30,38 @@
 
     <div class="row">
         <h4>Portfolio</h4>
-        <div *ngIf="stocks.length > 0">
-            <div class="card col-8 mb-2" *ngFor="let s of stocks">
+        <div *ngIf="portfolio.stocks.length > 0; else noStocks">
+            <div class="card col-8 mb-2" *ngFor="let s of portfolio.stocks">
                 <div class="card-body">
                     <div class="row">
-                        <h5 class="card-title col-6">{{ s.symbol }}</h5>
-                        <!-- <p class="card-text right col-6">{{ s.price | currency }}</p> -->
+                        <div class="col-7">
+                            <h5 class="card-title">{{ s.symbol }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
+                        </div>
+                        <div class="col-5">
+                            <p class="card-title col-12 right">{{ s.buyPrice | currency }} X {{ s.quantity }} = 
+                                <strong>{{ (s.buyPrice * s.quantity) | currency }}</strong></p>
+                            <div class="col-12" *ngIf="!s.completed; else sellOption">
+                                <div class="right">
+                                    <span class="text-muted">Pending completion</span>&nbsp;
+                                    <button type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
+                                </div>
+                            </div>
+                            <ng-template class="col-12" #sellOption>
+                                <button type="button" class="btn btn-danger right" (click)="sell()">Sell</button>
+                            </ng-template>
+                        </div>
                     </div>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ s.name }}</h6>
                 </div>
             </div>
         </div>
-        <div *ngIf="stocks.length == 0">
+        <ng-template #noStocks>
             <p>You don't have any investments</p>
-        </div>
+        </ng-template>
     </div>
 </div>
 
-<div class="container-xl" *ngIf="!account && errorMsg">
+<div class="container-xl" *ngIf="!portfolio!.account && errorMsg">
     <p class="error">{{ errorMsg }}</p>
 </div>
 
@@ -61,9 +75,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3" *ngIf="account">
+                <div class="mb-3" *ngIf="portfolio?.account">
                     <p><b>Balance/Investments will not be transferred to other account and will be deleted</b></p>
-                    <p>Are you sure you want to delete account <strong>{{ account.name }}</strong>?</p>
+                    <p>Are you sure you want to delete account <strong>{{ portfolio?.account!.name }}</strong>?</p>
                 </div>
                 <div class="text-danger">{{ modelErrorMsg }}</div>
             </div>
@@ -100,6 +114,27 @@
                     <button type="submit" class="btn btn-primary">Confirm</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade show" id="cancelPurchase" tabindex="-1" aria-labelledby="cancel-purchase" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cancel Purchase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3" *ngIf="activeStock">
+                    <p>Are you sure you want to cancel purchase of stock <strong>{{ activeStock!.name }}</strong>?</p>
+                </div>
+                <div class="text-danger">{{ modelErrorMsg }}</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="cancel(activeStock!, 'cancel')">Confirm</button>
+            </div>
         </div>
     </div>
 </div>

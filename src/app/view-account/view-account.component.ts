@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../services/account.service';
-import { Account } from '../models/account';
-import { Stock } from '../models/stock';
+import { Account, Portfolio } from '../models/account';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PurchaseStock } from '../models/stock';
 
 declare var jQuery: any;
 
@@ -14,9 +14,9 @@ declare var jQuery: any;
 })
 export class ViewAccountComponent implements OnInit {
 
-  account: Account | null = null;
-  stocks: Stock[] = [];
-  
+  portfolio: Portfolio | null = null;
+  activeStock: PurchaseStock | null = null;
+
   errorMsg: string | null = null;
   modelErrorMsg: string | null = null;
 
@@ -36,8 +36,8 @@ export class ViewAccountComponent implements OnInit {
     const id = this.activatedroute.snapshot.paramMap.get('id');
     if (id) {
       this.accountServ.getAccount(id)
-        .subscribe((resp: Account) => {
-          this.account = resp;
+        .subscribe((resp: Portfolio) => {
+          this.portfolio = resp;
         }, err => {
           if (err.message) {
             this.errorMsg = err.message;
@@ -51,7 +51,7 @@ export class ViewAccountComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.accountServ.deleteAccount(this.account!._id)
+    this.accountServ.deleteAccount(this.portfolio!.account!._id)
     .subscribe((resp: Boolean) => {
       if (resp) {
         jQuery("#deleteAccount").modal("hide");
@@ -78,7 +78,7 @@ export class ViewAccountComponent implements OnInit {
   updateFunds() {
     this.updateFundsForm.markAllAsTouched();
     if (this.updateFundsForm.valid) {
-      let amount = this.account!.balance;
+      let amount = this.portfolio!.account!.balance;
       if (isNaN(this.updateFundsForm.value.balance)) {
         this.modelErrorMsg = 'Invalid amount';
         return;
@@ -93,14 +93,30 @@ export class ViewAccountComponent implements OnInit {
         }
       }
 
-      this.accountServ.updateBalance(this.account!._id, amount, this.fundsUpdateType!, this.account!.balance)
+      this.accountServ.updateBalance(this.portfolio!.account!._id, amount, this.fundsUpdateType!, this.portfolio!.account!.balance)
         .subscribe(resp => {
-          this.account!.balance = amount;
+          this.portfolio!.account!.balance = amount;
           jQuery("#updateFunds").modal("hide");
         }, err => {
           this.modelErrorMsg = `Failed to ${this.fundsUpdateType}`;
         });
     }
+  }
+
+  cancel(stock: PurchaseStock, action: string) {
+    this.activeStock = stock;
+    
+    if (action === 'show') {
+      jQuery("#cancelPurchase").modal("show");
+    }
+
+    if (action === 'cancel') {
+        
+    }
+  }
+
+  sell() {
+
   }
 
 }
