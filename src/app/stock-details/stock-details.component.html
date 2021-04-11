@@ -139,12 +139,16 @@
                 <div class="mb-3" *ngIf="formErrorMsg.length > 0">
                     <p class="error">{{ formErrorMsg }}</p>
                 </div>
-                <div class="mb-3 center">
+                <div class="mb-3 center" *ngIf="!stockQuoteTimeout">
                     <button type="submit" class="btn btn-lg btn-success" [disabled]="!buyForm.valid || formErrorMsg !== '' || buyForm.value.total === 0">Order</button>
+                </div>
+                <div class="mb-3 center" *ngIf="stockQuoteTimeout">
+                    <button type="button" class="btn btn-lg btn-primary" (click)="updateQuote()">Update Quote</button>
                 </div>
                 <div class="mb-3" *ngIf="successMsg.length > 0">
                     <p class="success">{{ successMsg }}</p>
                 </div>
+
             </form>
             <ng-template #noAccounts>
                 <p>No accounts available</p>

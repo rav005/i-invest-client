@@ -16,6 +16,7 @@ declare let google: any;
 })
 export class StockDetailsComponent implements OnInit {
 
+  stockQuoteTimeout: boolean = false;
   stockQuote: StockQuote | null = null;
   symbol: string | null = null;
   name: string | null = null;
@@ -66,6 +67,11 @@ export class StockDetailsComponent implements OnInit {
       .subscribe(resp => {
         this.stockQuote = resp;
         this.loading = false;
+        this.stockQuoteTimeout = false;
+
+        setTimeout(() => {
+          this.stockQuoteTimeout = true;
+        }, 60000 * 5);
 
         this.accountServ.getAccounts()
         .subscribe(resp => {
@@ -167,6 +173,21 @@ export class StockDetailsComponent implements OnInit {
     });
   }
 
+  updateQuote() {
+    this.stockService.getStock(this.symbol!)
+      .subscribe(resp => {
+        this.stockQuote = resp;
+        this.loading = false;
+        this.stockQuoteTimeout = false;
+
+        setTimeout(() => {
+          this.stockQuoteTimeout = true;
+        }, 60000 * 5);
+      }, err => {
+
+      });
+  }
+
   buy() {
     let accId = this.buyForm.value.account;
     let type = this.buyForm.value.type;
@@ -184,6 +205,9 @@ export class StockDetailsComponent implements OnInit {
       (resp: any) => {
         if (resp.success) {
           this.successMsg = resp.message
+          setTimeout(() => {
+            this.successMsg = '';
+          }, 5000);
           this.accounts = this.accounts.map(x => {
             if (x._id == accId) {
               x.balance -= (quantity * price);
@@ -192,6 +216,9 @@ export class StockDetailsComponent implements OnInit {
           });
         } else {
           this.formErrorMsg = resp.message;
+          setTimeout(() => {
+            this.formErrorMsg = '';
+          }, 5000);
         }
 
         this.buyForm.patchValue({
@@ -205,6 +232,11 @@ export class StockDetailsComponent implements OnInit {
         } else {
           this.formErrorMsg = 'Failed to order stock';
         }
+        
+        setTimeout(() => {
+          this.formErrorMsg = '';
+        }, 5000);
+
         this.buyForm.patchValue({
           quantity: 1,
           price: 0
