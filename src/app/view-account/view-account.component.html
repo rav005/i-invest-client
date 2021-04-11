@@ -1,10 +1,10 @@
 <div class="container-xl" *ngIf="portfolio">
     <div class="row">
-        <div class="col-10 mb-2">
+        <div class="col-12 col-md-10 mb-2">
             <h1 class="card-title">{{ portfolio.account.name }}</h1>
             <h5 class="card-title">Available balance: {{ portfolio.account.balance | currency }} {{ portfolio.account.currency }}</h5>
         </div>
-        <div class="col-2 mb-2 last">
+        <div class="col-12 col-md-2 mb-2 last">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#updateFunds" (click)="updateFundsType('Deposit')">Deposit</button><br />
             <button type="button" class="btn btn-success" data-bs-toggle="modal"
@@ -38,7 +38,7 @@
                     <td class="text-right">{{ s.currentPrice | currency }}</td>
                     <td class="text-right">{{ ((s.currentPrice - s.price)/s.price) | percent:'0.2' }}</td>
                     <td class="text-right">
-                        <button *ngIf="!s.completed" type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
+                        <button *ngIf="s.completed" type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
                         <button *ngIf="s.completed" type="button" class="btn btn-warning" (click)="sell()">Sell</button>
                     </td>
                   </tr>

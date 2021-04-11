@@ -1,14 +1,14 @@
 <nav class="navbar navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand mb-0 h1" href="#">
+    <a class="navbar-brand mb-0 h1 col-12 col-md-3" href="#">
       <img src="assets/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
       I-Invest
     </a>
 
-    <div class="col-4 align-items-center">
+    <div class="col-12 col-md-4 align-items-center">
       <input type="text" #searchInputEle id="search" [(ngModel)]="searchText" class="form-control" placeholder="Search"
         (keyup)="search()">
-      <div #searchResultEle class="searchResult col-4" *ngIf="searchResult.length > 0">
+      <div #searchResultEle class="searchResult col-11 col-md-4" *ngIf="searchResult.length > 0">
         <div class="card stock" *ngFor="let s of searchResult">
           <div class="card-body stock" (click)="view(s)">
             <h5 class="card-title stock">{{ s.description }}</h5>
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="right">
+    <div class="right col-12 col-md-4">
       <button class="btn btn-outline-danger right" (click)="logout()"><i class="bi bi-box-arrow-right"></i></button>
       <div class="nav-item dropdown right">
         <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
