@@ -21,7 +21,7 @@ export class StockDetailsComponent implements OnInit {
   symbol: string | null = null;
   name: string | null = null;
   currency: string | null = null;
-  
+
   filterMarketNews: News[] = [];
   marketNews: News[] = [];
   hasMoreNews: boolean = false;
@@ -37,7 +37,7 @@ export class StockDetailsComponent implements OnInit {
   formErrorMsg: string = '';
   successMsg: string = '';
   accounts: Account[] = [];
-  
+
   exchangeRate: number = 1;
   accountCurrency: string = '';
   exchangeCurrency: string = '';
@@ -45,15 +45,15 @@ export class StockDetailsComponent implements OnInit {
   loading: boolean = false;
   pageErrorMsg: string = '';
 
-  constructor(private activatedroute: ActivatedRoute, private router: Router, 
+  constructor(private activatedroute: ActivatedRoute, private router: Router,
     private stockService: StockService, private accountServ: AccountService) {
-      this.buyForm = new FormGroup({
-        type: new FormControl('', [Validators.required]),
-        account: new FormControl('', [Validators.required]),
-        quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
-        price: new FormControl(0, [Validators.required, Validators.min(0)]),
-        total: new FormControl(0)
-      });
+    this.buyForm = new FormGroup({
+      type: new FormControl('', [Validators.required]),
+      account: new FormControl('', [Validators.required]),
+      quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
+      price: new FormControl(0, [Validators.required, Validators.min(0)]),
+      total: new FormControl(0)
+    });
   }
 
   ngOnInit(): void {
@@ -64,44 +64,44 @@ export class StockDetailsComponent implements OnInit {
     if (this.symbol) {
       this.loading = true;
       this.stockService.getStock(this.symbol)
-      .subscribe(resp => {
-        this.stockQuote = resp;
-        this.loading = false;
-        this.stockQuoteTimeout = false;
-
-        setTimeout(() => {
-          this.stockQuoteTimeout = true;
-        }, 60000 * 5);
-
-        this.accountServ.getAccounts()
         .subscribe(resp => {
-          this.accounts = resp;
-          this.buyForm.patchValue({
-            account: this.accounts[0]._id,
-            type: "Market buy"
-          });
-          this.updateForm();
-        }, err => {});
+          this.stockQuote = resp;
+          this.loading = false;
+          this.stockQuoteTimeout = false;
 
-        this.getCurrencyRates();
-        this.getCompanyNews();
-        this.getBasicFinancials();
-        this.getRecommendations();
-        this.getHistoricalData();
-      }, err => {
-        this.pageErrorMsg = 'Failed to fetch stock details';
-        this.loading = false;
-      });
+          setTimeout(() => {
+            this.stockQuoteTimeout = true;
+          }, 60000 * 5);
+
+          this.accountServ.getAccounts()
+            .subscribe(resp => {
+              this.accounts = resp;
+              this.buyForm.patchValue({
+                account: this.accounts[0]._id,
+                type: "Market buy"
+              });
+              this.updateForm();
+            }, err => { });
+
+          this.getCurrencyRates();
+          this.getCompanyNews();
+          this.getBasicFinancials();
+          this.getRecommendations();
+          this.getHistoricalData();
+        }, err => {
+          this.pageErrorMsg = 'Failed to fetch stock details';
+          this.loading = false;
+        });
 
       this.stockService.getWatchList(false).toPromise()
-      .then(w => {
-        let s = w.find(x => x.symbol === this.symbol);
-        if(s) {
-          this.watchlisted = true;
-        } else {
-          this.watchlisted = false;
-        }
-      }).catch(e => {})
+        .then(w => {
+          let s = w.find(x => x.symbol === this.symbol);
+          if (s) {
+            this.watchlisted = true;
+          } else {
+            this.watchlisted = false;
+          }
+        }).catch(e => { })
     } else {
       this.router.navigate(['']);
     }
@@ -109,14 +109,14 @@ export class StockDetailsComponent implements OnInit {
 
   private getCurrencyRates() {
     this.stockService.getCurrenyRates()
-    .subscribe(
-      resp => {
-        if (resp) {
-          this.exchange = resp;
-          this.updateForm();
-        }
-      }, err => {}
-    );
+      .subscribe(
+        resp => {
+          if (resp) {
+            this.exchange = resp;
+            this.updateForm();
+          }
+        }, err => { }
+      );
   }
 
   public updateForm() {
@@ -141,7 +141,7 @@ export class StockDetailsComponent implements OnInit {
 
     this.accountCurrency = account!.currency;
 
-    if (!this.exchange) { 
+    if (!this.exchange) {
       this.buyForm.patchValue({
         total: quantity * price
       });
@@ -150,11 +150,11 @@ export class StockDetailsComponent implements OnInit {
 
     let exchangeRate = 1;
     if (this.currency == 'USD' && account?.currency != 'USD') {
-      exchangeRate = this.exchange!.USD_CAD;
+      exchangeRate = this.exchange!.CAD_USD;
       this.exchangeRate = exchangeRate;
       this.exchangeCurrency = 'USD';
     } else if (this.currency == 'CAD' && account?.currency != 'CAD') {
-      exchangeRate = this.exchange!.CAD_USD;
+      exchangeRate = this.exchange!.USD_CAD;
       this.exchangeRate = exchangeRate;
       this.exchangeCurrency = 'CAD';
     } else {
@@ -201,56 +201,56 @@ export class StockDetailsComponent implements OnInit {
     }
 
     this.stockService.placeOrder(this.name!, this.symbol!, this.currency!, quantity, price, type, accId)
-    .subscribe(
-      (resp: any) => {
-        if (resp.success) {
-          this.successMsg = resp.message
-          setTimeout(() => {
-            this.successMsg = '';
-          }, 5000);
-          this.accounts = this.accounts.map(x => {
-            if (x._id == accId) {
-              x.balance -= (quantity * price);
-            }
-            return x;
+      .subscribe(
+        (resp: any) => {
+          if (resp.success) {
+            this.successMsg = resp.message
+            setTimeout(() => {
+              this.successMsg = '';
+            }, 5000);
+            this.accounts = this.accounts.map(x => {
+              if (x._id == accId) {
+                x.balance -= (quantity * price);
+              }
+              return x;
+            });
+          } else {
+            this.formErrorMsg = resp.message;
+            setTimeout(() => {
+              this.formErrorMsg = '';
+            }, 5000);
+          }
+
+          this.buyForm.patchValue({
+            quantity: 1,
+            price: 0
           });
-        } else {
-          this.formErrorMsg = resp.message;
+          this.updateForm();
+        }, err => {
+          if (err.error.message) {
+            this.formErrorMsg = err.error.message;
+          } else {
+            this.formErrorMsg = 'Failed to order stock';
+          }
+
           setTimeout(() => {
             this.formErrorMsg = '';
           }, 5000);
-        }
 
-        this.buyForm.patchValue({
-          quantity: 1,
-          price: 0
-        });
-        this.updateForm();
-      }, err => {
-        if (err.error.message) {
-          this.formErrorMsg = err.error.message;
-        } else {
-          this.formErrorMsg = 'Failed to order stock';
+          this.buyForm.patchValue({
+            quantity: 1,
+            price: 0
+          });
+          this.updateForm();
         }
-        
-        setTimeout(() => {
-          this.formErrorMsg = '';
-        }, 5000);
-
-        this.buyForm.patchValue({
-          quantity: 1,
-          price: 0
-        });
-        this.updateForm();
-      }
-    );
+      );
   }
 
   private getCompanyNews() {
     this.stockService.getCompanyNews(this.symbol!)
       .subscribe(
         (resp: News[]) => {
-          this.marketNews =  resp;
+          this.marketNews = resp;
           if (this.marketNews.length > 0) {
             this.filterMarketNews = this.marketNews.slice(0, 5);
             if (this.marketNews.length > 5) {
@@ -275,41 +275,41 @@ export class StockDetailsComponent implements OnInit {
     this.stockService.getBasicFinancials(this.symbol!)
       .subscribe((resp: Metric) => {
         this.metric = resp;
-      }, err => {})
+      }, err => { })
   }
 
   private getRecommendations() {
     this.stockService.getRecommendations(this.symbol!)
-    .subscribe((resp: Trend[]) => {
-      this.drawRecommendationChart(resp);
-    }, err => {})
+      .subscribe((resp: Trend[]) => {
+        this.drawRecommendationChart(resp);
+      }, err => { })
   }
 
   private getHistoricalData() {
     this.stockService.getHistoricalData(this.symbol!).toPromise()
-    .then(data => {
-      if (data.length == 0) {
-        this.showTrendGraph = false;
-      }
-      this.drawHistGraph(data)
-    })
-    .catch(err => { this.showTrendGraph = false; });
+      .then(data => {
+        if (data.length == 0) {
+          this.showTrendGraph = false;
+        }
+        this.drawHistGraph(data)
+      })
+      .catch(err => { this.showTrendGraph = false; });
   }
 
   private drawHistGraph(chartData: any) {
-    google.charts.load('current', {'packages':['corechart']});
+    google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
     var lineChartCols: any[] = [];
     var dataColors: any[] = [
-      { color: '#306EFF', disableColor: '#82CAFF'},
-      { color: '#348017', disableColor: '#99C68E'},
-      { color: '#C68E17', disableColor: '#ECE5B6'},
-      { color: '#F62217', disableColor: '#F75D59'},
-      { color: '#7F38EC', disableColor: '#E0B0FF'},
-      { color: '#E4287C', disableColor: '#F778A1'},
-      { color: '#7E3517', disableColor: '#C5908E'},
-      { color: '#827839', disableColor: '#C8B560'}
+      { color: '#306EFF', disableColor: '#82CAFF' },
+      { color: '#348017', disableColor: '#99C68E' },
+      { color: '#C68E17', disableColor: '#ECE5B6' },
+      { color: '#F62217', disableColor: '#F75D59' },
+      { color: '#7F38EC', disableColor: '#E0B0FF' },
+      { color: '#E4287C', disableColor: '#F778A1' },
+      { color: '#7E3517', disableColor: '#C5908E' },
+      { color: '#827839', disableColor: '#C8B560' }
     ];
     if (chartData[0]) {
       chartData[0].forEach((x: string) => {
@@ -328,26 +328,26 @@ export class StockDetailsComponent implements OnInit {
 
       // Toggle visibility of data series on click of legend.
       google.visualization.events.addListener(chart, 'click', function (target: any) {
-        if (target.targetID.match(/^legendentry#\d+$/)) {    
+        if (target.targetID.match(/^legendentry#\d+$/)) {
           var index = parseInt(target.targetID.slice(12)) + 1;
           lineChartCols[index].visible = !lineChartCols[index].visible;
           drawChart();
         }
       });
-      
+
       let visibleColumnIndexes = <any>[0];
       let colors: string[] = [];
       for (var i = 1; i < lineChartCols.length; i++) {
         if (lineChartCols[i].visible) {
           visibleColumnIndexes.push(i);
-          colors.push(dataColors[i-1].color);
+          colors.push(dataColors[i - 1].color);
         } else {
           visibleColumnIndexes.push({
             calc: () => null,
             type: 'number',
             label: lineChartCols[i].name
           });
-          colors.push(dataColors[i-1].disableColor);
+          colors.push(dataColors[i - 1].disableColor);
         }
       }
       dataView.setColumns(visibleColumnIndexes);
@@ -361,7 +361,7 @@ export class StockDetailsComponent implements OnInit {
 
   // https://codepen.io/gapple/details/nluHK
   private drawRecommendationChart(chartData: any) {
-    google.charts.load('current', {'packages': ['bar']});
+    google.charts.load('current', { 'packages': ['bar'] });
     google.charts.setOnLoadCallback(drawChart);
     this.showRecommendationGraph = true;
 
@@ -371,14 +371,14 @@ export class StockDetailsComponent implements OnInit {
 
       const options = {
         isStacked: true,
-        vAxis: {format: 'decimal'},
-        hAxis: {format: '', title: ''},
+        vAxis: { format: 'decimal' },
+        hAxis: { format: '', title: '' },
         series: {
-          0: {color: '#ff6347'},
-          1: {color: '#3cb371'},
-          2: {color: '#ee82ee'},
-          3: {color: '#ffa500'},
-          4: {color: '#6a5acd'},
+          0: { color: '#ff6347' },
+          1: { color: '#3cb371' },
+          2: { color: '#ee82ee' },
+          3: { color: '#ffa500' },
+          4: { color: '#6a5acd' },
         }
       };
 
@@ -390,9 +390,9 @@ export class StockDetailsComponent implements OnInit {
 
   toggleWatchlist() {
     this.stockService.toggleWatchlist(this.symbol!, this.name!, this.currency!, !this.watchlisted)
-    .subscribe(resp => {
-      this.watchlisted = !this.watchlisted;
-    }, err => { });
+      .subscribe(resp => {
+        this.watchlisted = !this.watchlisted;
+      }, err => { });
   }
 
 }
