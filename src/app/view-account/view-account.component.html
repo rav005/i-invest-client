@@ -39,7 +39,7 @@
                     <td class="text-right">{{ ((s.currentPrice - s.price)/s.price) | percent:'0.2' }}</td>
                     <td class="text-right">
                         <button *ngIf="!s.completed" type="button" class="btn btn-danger" (click)="cancel(s, 'show')">Cancel</button>
-                        <button *ngIf="s.completed" type="button" class="btn btn-warning" (click)="sell()">Sell</button>
+                        <button *ngIf="s.completed" type="button" class="btn btn-warning" (click)="sell(s)">Sell</button>
                     </td>
                   </tr>
                 </tbody>
@@ -67,10 +67,16 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let s of transactions">
-                    <td>{{ s.transactionDate | date }}</td>
-                    <td>{{ s.stockSymbol }}<br>{{ s.name }}</td>
+                    <td>{{ s.transactionDate | date: 'short' }}</td>
+                    <td>
+                        <span *ngIf="s.stockSymbol">{{ s.stockSymbol }}<br>{{ s.name }}</span>
+                        <span *ngIf="!s.stockSymbol">-</span>
+                    </td>
                     <td class="text-right">{{ s.type }}</td>
-                    <td class="text-right">{{ s.quantity }}</td>
+                    <td class="text-right">
+                        <span *ngIf="s.quantity">{{ s.quantity }}</span>
+                        <span *ngIf="!s.quantity">-</span>
+                    </td>
                     <td class="text-right">{{ s.amount | currency }}</td>
                   </tr>
                 </tbody>
@@ -156,6 +162,52 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" (click)="cancel(activeStock!, 'cancel')">Confirm</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade show" id="sellStock" tabindex="-1" aria-labelledby="sell-stock" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sell Purchase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form [formGroup]="sellForm" (ngSubmit)="submitSell()">
+                <div class="modal-body">
+                    <div class="mb-3" *ngIf="activeStock">
+                        <p>Are you sure you want to sell stock <strong>{{ activeStock!.name }}</strong>?</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sellType">Type</label>
+                        <select class="form-select" (change)="updateForm()" (keyup)="updateForm()"formControlName="type" aria-label="Sell type" id="sellType">
+                            <option value="Market sell">Market sell</option>
+                            <option value="Limit sell">Limit sell</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" *ngIf="sellForm!.value.type === 'Limit sell'">
+                        <label for="price">Sell at</label>
+                        <input type="number" class="form-control" (change)="updateForm()" (keyup)="updateForm()" formControlName="price" placeholder="price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" (change)="updateForm()" (keyup)="updateForm()" min=1 [max]="activeStock?.quantity" formControlName="quantity" placeholder="quantity">
+                    </div>
+                    <div class="mb-3">
+                        <hr />
+                        <p *ngIf="exchangeRate !== 1 && accountCurrency && exchangeCurrency">
+                            Exchange rate: {{ accountCurrency }} {{ 1 | currency: accountCurrency:'symbol-narrow':'0.0'}} = 
+                            {{ exchangeCurrency }} <strong>{{ exchangeRate | currency: exchangeCurrency:'symbol-narrow' }}</strong>
+                        </p>
+                        <p><strong>Total: </strong>{{ sellForm.value.total | currency }}</p>
+                    </div>
+                    <div class="text-danger">{{ modelErrorMsg }}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" [disabled]="!sellForm.valid || modelErrorMsg">Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

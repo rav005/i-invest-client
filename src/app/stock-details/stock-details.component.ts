@@ -31,7 +31,7 @@ export class StockDetailsComponent implements OnInit {
 
   watchlisted: boolean = false;
 
-  private exchange: Exchange | null = null; 
+  private exchange: Exchange | null = null;
 
   buyForm: FormGroup;
   formErrorMsg: string = '';

@@ -212,4 +212,25 @@ export class StockService {
         );
     }
 
+    public sellStock(accountId: string, stockId: string, quantity: number, price: number, type: string) {
+        let complete = true;
+        if (type === 'Limit sell') {
+            complete = false;
+        }
+        const req = {
+            accountId: accountId,
+            stockId: stockId,
+            quantity: quantity,
+            price: price,
+            type: type,
+            completed: complete
+        };
+        return this.http.post('/stock/sellStock', req)
+        .pipe(
+            map((resp: any) => {
+                return resp.success;
+            })
+        );
+    }
+
 }
