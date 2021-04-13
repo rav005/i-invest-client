@@ -204,8 +204,6 @@ export class StockDetailsComponent implements OnInit {
 
     if (type === 'Limit buy') {
       price = limitBuy;
-    } else {
-      price = quantity * (price * (1/this.exchangeRate));
     }
 
 
@@ -218,12 +216,10 @@ export class StockDetailsComponent implements OnInit {
             this.successMsg = '';
           }, 5000);
           if (type === 'Market buy') {
-            this.accounts = this.accounts.map(x => {
-              if (x._id == accId) {
-                x.balance -= (quantity * price);
-              }
-              return x;
-            });
+            this.accountServ.getAccounts()
+            .subscribe(resp => {
+              this.accounts = resp;
+            }, err => { });
           }
         } else {
             this.formErrorMsg = resp.message;

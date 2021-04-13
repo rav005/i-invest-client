@@ -27,6 +27,8 @@
               (click)="reset()">Change password</a></li>
           <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateSecQues"
               (click)="reset()">Security question</a></li>
+          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteUserAccount"
+              (click)="reset()">Delete user account</a></li>
         </ul>
       </div>
     </div>
@@ -96,6 +98,27 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="updateSecurityQuestion()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade show" id="deleteUserAccount" tabindex="-1" aria-labelledby="password-change" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete user account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p>This will delete all user data permanently.</p>
+        </div>
+        <div class="text-danger">{{ modelErrorMsg }}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="deleteAccount()">Delete</button>
       </div>
     </div>
   </div>

@@ -107,4 +107,8 @@ export class AuthService {
         token: this.token 
       });
   }
+
+  public deleteUserAccount(): Observable<any> {
+    return this.http.post('/main/deleteUser', {});
+  }
 }

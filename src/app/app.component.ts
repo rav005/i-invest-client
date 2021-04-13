@@ -121,6 +121,20 @@ export class AppComponent {
     });
   }
 
+  deleteAccount() {
+    this.auth.deleteUserAccount().toPromise()
+    .then(resp => {
+      if(resp.success) {
+        this.auth.logout();
+        window.location.href = '/';
+      } else {
+        this.modelErrorMsg = 'Failed to delete user account';
+      }
+    }).catch(err => {
+      this.modelErrorMsg = 'Failed to delete user account';
+    });
+  }
+
   @HostListener('document:mousedown', ['$event'])
   onGlobalClick(event: MouseEvent): void {
     if (jQuery(event.target).hasClass('stock')) {
