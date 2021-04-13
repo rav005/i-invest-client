@@ -141,6 +141,8 @@ export class StockDetailsComponent implements OnInit {
         this.buyForm.patchValue({
           price: price
         });
+      } else {
+        price = limitBuy;
       }
 
       if (limitBuy < 0) {
