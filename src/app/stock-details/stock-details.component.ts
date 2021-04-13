@@ -155,6 +155,7 @@ export class StockDetailsComponent implements OnInit {
     }
 
     let exchangeRate = 1;
+    let totalPrice = 0;
     if (this.currency == 'USD' && account?.currency != 'USD') {
       exchangeRate = this.exchange!.CAD_USD;
       this.exchangeRate = exchangeRate;
@@ -166,8 +167,7 @@ export class StockDetailsComponent implements OnInit {
     } else {
       this.exchangeRate = exchangeRate;
     }
-    let totalPrice = quantity * (price * exchangeRate);
-    console.log('total price: ', totalPrice, ', account balance: ', account!.balance);
+    totalPrice = quantity * (price * (1/exchangeRate));
     if (totalPrice > account!.balance) {
       this.formErrorMsg = 'Insufficient funds';
     } else {

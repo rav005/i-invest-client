@@ -225,6 +225,12 @@ export class ViewAccountComponent implements OnInit {
     this.sellForm.patchValue({
       total: price
     });
+
+    if (quantity > this.activeStock!.quantity) {
+      this.modelErrorMsg = 'Insufficient quantity';
+    } else {
+      this.modelErrorMsg = '';
+    }
   }
 
   submitSell() {
