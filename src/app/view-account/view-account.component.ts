@@ -195,7 +195,7 @@ export class ViewAccountComponent implements OnInit {
     this.accountCurrency = this.portfolio!.account.currency;
     this.exchangeCurrency = stock.currency;
     let price = stock.currentPrice;
-    if (this.exchange) { 
+    if (this.exchange) {
       if (this.exchangeCurrency == 'USD' && this.accountCurrency != 'USD') {
         this.exchangeRate = this.exchange!.CAD_USD;
         price = stock.currentPrice * (1/this.exchangeRate);
@@ -211,7 +211,7 @@ export class ViewAccountComponent implements OnInit {
 
     this.sellForm.patchValue({
       type: 'Market sell',
-      price: price,
+      price: stock.currentPrice,
       total: price
     });
 
@@ -226,6 +226,11 @@ export class ViewAccountComponent implements OnInit {
 
     let price = this.activeStock!.currentPrice * quantity;
     if (type === 'Limit sell') {
+      if (sellPrice === 0) {
+        this.sellForm.patchValue({
+          price: this.activeStock!.currentPrice
+        });
+      }
       price = sellPrice * quantity;
     } else {
       if (this.exchangeCurrency !== this.accountCurrency) {

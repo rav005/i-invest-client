@@ -197,7 +197,10 @@
                     </div>
                     <div class="mb-3">
                         <hr />
-                        <p *ngIf="exchangeRate !== 1 && accountCurrency && exchangeCurrency">
+                        <p *ngIf="exchangeRate !== 1 && accountCurrency && exchangeCurrency && sellForm.value.type === 'Limit sell'">
+                            Limit sell in <strong>{{ exchangeCurrency }}</strong>
+                        </p>
+                        <p *ngIf="exchangeRate !== 1 && accountCurrency && exchangeCurrency && sellForm.value.type !== 'Limit sell'">
                             Exchange rate: {{ accountCurrency }} {{ 1 | currency: accountCurrency:'symbol-narrow':'0.0'}} = 
                             {{ exchangeCurrency }} <strong>{{ exchangeRate | currency: exchangeCurrency:'symbol-narrow' }}</strong>
                         </p>
