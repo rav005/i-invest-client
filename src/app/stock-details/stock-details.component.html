@@ -126,7 +126,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="quantity">Quantity</label>
-                    <input type="number" class="form-control" (change)="updateForm()" (keyup)="updateForm()" formControlName="quantity" placeholder="quantity">
+                    <input type="number" class="form-control" (change)="updateForm()" (keyup)="updateForm()" min="1" formControlName="quantity" placeholder="quantity">
                 </div>
                 <div class="mb-3">
                     <hr />

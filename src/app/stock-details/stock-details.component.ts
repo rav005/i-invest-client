@@ -166,8 +166,8 @@ export class StockDetailsComponent implements OnInit {
     } else {
       this.exchangeRate = exchangeRate;
     }
-
     let totalPrice = quantity * (price * exchangeRate);
+    console.log('total price: ', totalPrice, ', account balance: ', account!.balance);
     if (totalPrice > account!.balance) {
       this.formErrorMsg = 'Insufficient funds';
     } else {
@@ -369,7 +369,6 @@ export class StockDetailsComponent implements OnInit {
 
   // https://codepen.io/gapple/details/nluHK
   private drawRecommendationChart(chartData: any) {
-    console.log('data: ', chartData);
     google.charts.load('current', { 'packages': ['bar'] });
     google.charts.setOnLoadCallback(drawChart);
     this.showRecommendationGraph = true;
