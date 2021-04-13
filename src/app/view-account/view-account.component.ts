@@ -197,12 +197,12 @@ export class ViewAccountComponent implements OnInit {
     let price = stock.currentPrice;
     if (this.exchange) { 
       if (this.exchangeCurrency == 'USD' && this.accountCurrency != 'USD') {
-        this.exchangeRate = this.exchange!.USD_CAD;
-        price = stock.currentPrice * this.exchangeRate;
+        this.exchangeRate = this.exchange!.CAD_USD;
+        price = stock.currentPrice * (1/this.exchangeRate);
         this.exchangeCurrency = 'USD';
       } else if (this.exchangeCurrency == 'CAD' &&this.accountCurrency != 'CAD') {
-        this.exchangeRate = this.exchange!.CAD_USD;
-        price = stock.currentPrice * this.exchangeRate;
+        this.exchangeRate = this.exchange!.USD_CAD;
+        price = stock.currentPrice * (1/this.exchangeRate);
         this.exchangeCurrency = 'CAD';
       }
 
@@ -221,7 +221,7 @@ export class ViewAccountComponent implements OnInit {
 
   updateForm() {
     const quantity = this.sellForm.value.quantity;
-    let price = this.activeStock!.currentPrice * this.exchangeRate * quantity;
+    let price = this.activeStock!.currentPrice * (1/this.exchangeRate) * quantity;
     this.sellForm.patchValue({
       total: price
     });

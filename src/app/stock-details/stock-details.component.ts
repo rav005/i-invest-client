@@ -204,7 +204,10 @@ export class StockDetailsComponent implements OnInit {
 
     if (type === 'Limit buy') {
       price = limitBuy;
+    } else {
+      price = quantity * (price * (1/this.exchangeRate));
     }
+
 
     this.stockService.placeOrder(this.name!, this.symbol!, this.currency!, quantity, price, type, accId)
     .subscribe(
