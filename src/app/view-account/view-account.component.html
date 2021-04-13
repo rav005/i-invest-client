@@ -23,6 +23,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Symbol<br/>Name</th>
+                    <th scope="col">Type</th>
                     <th scope="col" class="text-right">Quantity</th>
                     <th scope="col" class="text-right">Purchase price</th>
                     <th scope="col" class="text-right">Current price</th>
@@ -33,6 +34,7 @@
                 <tbody>
                   <tr *ngFor="let s of portfolio.stocks">
                     <td scope="row">{{ s.symbol }}<br>{{ s.name }}</td>
+                    <td scope="row">{{ s.type }}</td>
                     <td class="text-right">{{ s.quantity }}</td>
                     <td class="text-right">{{ s.price | currency }}</td>
                     <td class="text-right">{{ s.currentPrice | currency }}</td>
