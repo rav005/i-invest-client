@@ -369,6 +369,7 @@ export class StockDetailsComponent implements OnInit {
 
   // https://codepen.io/gapple/details/nluHK
   private drawRecommendationChart(chartData: any) {
+    console.log('data: ', chartData);
     google.charts.load('current', { 'packages': ['bar'] });
     google.charts.setOnLoadCallback(drawChart);
     this.showRecommendationGraph = true;

@@ -42,8 +42,8 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" [ngClass]="{ 'is-invalid': secQuestionAns.invalid && secQuestionAns.touched }" 
-                        [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security question answer">
-                    <label for="securityQuestionAns">Security question answer</label>
+                        [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security answer">
+                    <label for="securityQuestionAns">Security answer</label>
                 </div>
             </div>
             <div *ngIf="enablePasswordReset">
@@ -84,8 +84,8 @@
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" [ngClass]="{ 'is-invalid': secQuestionAns.invalid && secQuestionAns.touched }" 
-                    [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security question answer">
-                <label for="securityQuestionAns">Security question answer</label>
+                    [formControl]="secQuestionAns" id="securityQuestionAns" placeholder="Security answer">
+                <label for="securityQuestionAns">Security answer</label>
             </div>
             <div class="form-floating mb-3" *ngIf="errorMsg.length > 0">
                 <p class="error">{{ errorMsg }}</p>
