@@ -72,7 +72,7 @@ import { Account, Portfolio, Transaction } from '../models/account';
         .pipe(
             map((resp: any) => {
                 if  (resp.transactions) {
-                    return resp.transactions;
+                    return resp.transactions.reverse();
                 }
                 throw resp;
             })
