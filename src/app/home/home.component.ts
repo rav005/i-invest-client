@@ -83,6 +83,14 @@ export class HomeComponent implements OnInit {
     return this.accountForm.controls;
   }
 
+  toggleAccount() {
+    this.accountForm = new FormGroup({
+      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      balance: new FormControl('', [Validators.required, Validators.min(1)]),
+      currency: new FormControl('CAD', [Validators.required])
+    });
+  }
+
   addAccount() {
     this.accountForm.markAllAsTouched();
     if (this.accountForm.valid) {
