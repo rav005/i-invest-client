@@ -226,7 +226,9 @@ export class ViewAccountComponent implements OnInit {
       total: price
     });
 
-    if (quantity > this.activeStock!.quantity) {
+    if (quantity < 1) {
+      this.modelErrorMsg = 'Invalid quantity';
+    } else if (quantity > this.activeStock!.quantity) {
       this.modelErrorMsg = 'Insufficient quantity';
     } else {
       this.modelErrorMsg = '';

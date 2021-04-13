@@ -126,6 +126,14 @@ export class StockDetailsComponent implements OnInit {
     let limitBuy = this.buyForm.value.price;
     let quantity = this.buyForm.value.quantity;
 
+    if (quantity < 1) {
+      this.formErrorMsg = 'Invalid quantity';
+      this.buyForm.patchValue({
+        price: 0
+      });
+      return;
+    }
+
     let price = this.stockQuote!.c;
 
     if (type === 'Limit buy') {
@@ -133,8 +141,14 @@ export class StockDetailsComponent implements OnInit {
         this.buyForm.patchValue({
           price: price
         });
-      } else {
-        price = limitBuy;
+      }
+
+      if (limitBuy < 0) {
+        this.formErrorMsg = 'Invalid buy at price';
+        this.buyForm.patchValue({
+          total: 0
+        });
+        return;
       }
     }
 
