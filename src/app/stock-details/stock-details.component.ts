@@ -129,7 +129,13 @@ export class StockDetailsComponent implements OnInit {
     let price = this.stockQuote!.c;
 
     if (type === 'Limit buy') {
-      price = limitBuy;
+      if (limitBuy === 0) {
+        this.buyForm.patchValue({
+          price: price
+        });
+      } else {
+        price = limitBuy;
+      }
     }
 
     if (!this.stockQuote || !account) {
@@ -208,12 +214,14 @@ export class StockDetailsComponent implements OnInit {
           setTimeout(() => {
             this.successMsg = '';
           }, 5000);
-          this.accounts = this.accounts.map(x => {
-            if (x._id == accId) {
-              x.balance -= (quantity * price);
-            }
-            return x;
-          });
+          if (type === 'Market buy') {
+            this.accounts = this.accounts.map(x => {
+              if (x._id == accId) {
+                x.balance -= (quantity * price);
+              }
+              return x;
+            });
+          }
         } else {
           this.formErrorMsg = resp.message;
           setTimeout(() => {

@@ -51,22 +51,28 @@ export class ViewAccountComponent implements OnInit {
   ngOnInit(): void {
     const id = this.activatedroute.snapshot.paramMap.get('id');
     if (id) {
-      this.accountServ.getAccount(id)
-        .subscribe((resp: Portfolio) => {
-          this.portfolio = resp;
-
-          this.getCurrencyRates();
-          this.getActivity(id);
-        }, err => {
-          if (err?.error?.message) {
-            this.errorMsg = err.error.message;
-          } else {
-            this.errorMsg = 'Failed to load account';
-          }
-        });
+      this.loadAccount(id);
     } else {
       this.router.navigate(['']);
     }
+  }
+
+  private loadAccount(accountId: string) {
+    this.accountServ.getAccount(accountId)
+    .subscribe((resp: Portfolio) => {
+      this.portfolio = resp;
+
+      if(this.exchange == null) {
+        this.getCurrencyRates();
+      }
+      this.getActivity(accountId);
+    }, err => {
+      if (err?.error?.message) {
+        this.errorMsg = err.error.message;
+      } else {
+        this.errorMsg = 'Failed to load account';
+      }
+    });
   }
 
   private getActivity(accountId: string) {
@@ -136,7 +142,7 @@ export class ViewAccountComponent implements OnInit {
 
       this.accountServ.updateBalance(this.portfolio!.account!._id, amount, this.fundsUpdateType!, this.portfolio!.account!.balance)
         .subscribe(resp => {
-          this.portfolio!.account!.balance = amount;
+          this.loadAccount(this.portfolio!.account!._id);
           jQuery("#updateFunds").modal("hide");
         }, err => {
           this.modelErrorMsg = `Failed to ${this.fundsUpdateType}`;
@@ -161,6 +167,7 @@ export class ViewAccountComponent implements OnInit {
       .subscribe(
         resp => {
           if (resp) {
+            this.loadAccount(stock.accountId);
             jQuery("#cancelPurchase").modal("hide");
           } else {
             this.errorMsg = 'Failed to cancel order';
@@ -231,17 +238,8 @@ export class ViewAccountComponent implements OnInit {
     .subscribe(
       (resp) => {
         if (resp) {
+          this.loadAccount(accId);
           jQuery("#sellStock").modal("hide");
-          this.accountServ.getAccount(accId)
-          .subscribe((resp: Portfolio) => {
-            this.portfolio = resp;
-          }, err => {
-            if (err?.error?.message) {
-              this.errorMsg = err.error.message;
-            } else {
-              this.errorMsg = 'Failed to load account';
-            }
-          });
         } else {
           this.modelErrorMsg = 'Failed to sell stock';
         }
